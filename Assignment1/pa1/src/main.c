@@ -18,21 +18,20 @@ int process_file(char *fname)
 	}
 
 	//Read the contents and store in lines
-	while (fgets(line, LINE_SIZE, fp)) 
+	while (fgets(line, LINE_SIZE, fp))
 		strncpy(lines[i++], line, strlen(line));
 
 	fclose(fp);
-
 	return 0;
 }
 
 //Validate the input arguments, bullet proof the program
-int main(int argc, char *argv[]) 
+int main(int argc, char *argv[])
 {
 	//$./mymake Makefile
 	//Similarly account for -r flag
 	if (argc == 2 && strncmp(argv[1], "-p", 2)) {
-		process_file(argv[1]); 
+		process_file(argv[1]);
 		//TODO
 	}
 
@@ -40,14 +39,15 @@ int main(int argc, char *argv[])
 		//$./mymake Makefile target
 		if (strncmp(argv[1], "-p", 2) && !process_file(argv[1])) {
 			//TODO
-			
+
 		} else if (!strncmp(argv[1], "-p", 2)) {
-			//$./mymake -p Makefile 
+			//$./mymake -p Makefile
 			if (!process_file(argv[2])) {
 				//TODO
 			}
 		}
 	}
+	parse(lines[0]);
 
 	exit(EXIT_SUCCESS);
 }
