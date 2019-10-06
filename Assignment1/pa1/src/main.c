@@ -43,11 +43,9 @@ int main(int argc, char *argv[])
 		} else if (!strncmp(argv[1], "-p", 2)) {
 			//$./mymake -p Makefile
 			if (!process_file(argv[2])) {
-				//TODO
+				parse(lines);
 			}
 		}
 	}
-	parse(lines[0]);
-
 	exit(EXIT_SUCCESS);
 }
