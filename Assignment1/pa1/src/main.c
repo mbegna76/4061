@@ -77,7 +77,7 @@ void printTargets(struct target_block targets[128]) {
 }
 
 void execute(struct target_block current) {
-	
+
 	for (int i = 0; i < current.dep_count; i++) {
 		for (int j = 0; j < targetLength; j++) {
 			if (targets[j].name != NULL) {
@@ -87,12 +87,12 @@ void execute(struct target_block current) {
 			}
 		}
 	}
-	
+
 	for (int i = 0; i < current.recipe_count; i++) {
 		if (current.recipe[i] != NULL) {
 			// tokenize the recipe array to make passable arguments into exec
-			char delim[] = " ";									
-			char* rectok[100];
+			char delim[] = " ";
+			char* rectok[100] = {0};
 			char *ptr = strtok(current.recipe[i], delim);
 			int rectok_index = 0;
 			int argsize = 0;
@@ -100,12 +100,11 @@ void execute(struct target_block current) {
 			while(ptr != NULL) {
 				rectok[rectok_index] = ptr;
 				rectok_index++;
-				printf("%s\n", ptr);
 				ptr = strtok(NULL, delim);
 			}
-			
-			const char *cmd = rectok[0];	// set the first cmd parameter of execv
-			
+
+			char *cmd = rectok[0];	// set the first cmd parameter of execv
+
 			for (int j = 1; j < 100 ; j++) {	// find the size of the arg array
 				if (rectok[j] == NULL) {
 					break;
@@ -114,25 +113,25 @@ void execute(struct target_block current) {
 					argsize++;
 				}
 			}
-			
-		const char* arg[argsize+1];	// create arg array
+
+		char* arg[argsize + 1];	// create arg array
+		arg[argsize] = NULL;
 		int j = 0;
-		
-		for (int h = 1; h < argsize ; h++, j++) {	// make the argument array with the tokenized recipe
+
+		for (int h = 1; h < argsize +1 ; h++, j++) {	// make the argument array with the tokenized recipe
 			arg[j] = rectok[h];
 		}
-		
+
 		// now we have const char cmd* and const char args*
-		
+
 		pid_t kidpid = fork();	// create child process
-		
+
 		if (kidpid > 0) {		// if in parent wait
 			wait(NULL);
 		}
-		
-		else {					// in child, execute 
-			printf("argsize: %d\n", argsize);
-			execv(cmd, arg);
+
+		else {					// in child, execute
+			execvp(cmd, arg);
 			exit(1);
 		}
 
