@@ -57,9 +57,7 @@ void printTargets(struct target_block targets[128]) {
 	for(int i = 0; i < targetLength; i++) {
 		if (targets[i].name != NULL) {
 			printf("\nTarget '%s' has %d dependancies and %d recipes\n",
-																									targets[i].name,
-																				 		 		  targets[i].dep_count,
-																					        targets[i].recipe_count);
+			targets[i].name,targets[i].dep_count, targets[i].recipe_count);
 			for (int j = 0; j < MAX_DEP; j++) {
 				if (targets[i].depend[j] != NULL) {
 					printf("Dependancy %d is %s\n", j, targets[i].depend[j]);
