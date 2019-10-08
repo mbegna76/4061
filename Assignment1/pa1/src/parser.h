@@ -79,5 +79,4 @@ int parse(char str[MAX_LINES][LINE_SIZE]){
 	return 0;
 }
 
-
 #endif

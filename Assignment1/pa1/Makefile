@@ -4,7 +4,7 @@ CC = gcc
 CFLAGS = -Wall -std=c99 
 DBFLAG = -g
 SRC = ${CUR_DIR}/src/main.c 
-DEP = ${CUR_DIR}/src/graph.h ${CUR_DIR}/src/dfs_stack.h
+DEP = ${CUR_DIR}/src/graph.h ${CUR_DIR}/src/parser.h
 OBJ = ${CUR_DIR}/main.o
 
 .PHONY : clean all

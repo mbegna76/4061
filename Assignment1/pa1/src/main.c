@@ -5,6 +5,10 @@
 #include "graph.h"
 #include "parser.h"
 
+#include <sys/types.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
 //Parse the input makefile to determine targets, dependencies, and recipes
 int process_file(char *fname)
 {
@@ -56,11 +60,11 @@ void printRecipes(struct target_block current) {
 void printTargets(struct target_block targets[128]) {
 	for(int i = 0; i < targetLength; i++) {
 		if (targets[i].name != NULL) {
-			printf("\nTarget '%s' has %d dependancies and %d recipes\n",
+			printf("\nTarget '%s' has %d dependencies and %d recipes\n",
 			targets[i].name,targets[i].dep_count, targets[i].recipe_count);
 			for (int j = 0; j < MAX_DEP; j++) {
 				if (targets[i].depend[j] != NULL) {
-					printf("Dependancy %d is %s\n", j, targets[i].depend[j]);
+					printf("Dependency %d is %s\n", j, targets[i].depend[j]);
 				}
 			}
 			for (int j = 0; j < MAX_RECIPES_PT; j++) {
@@ -73,6 +77,7 @@ void printTargets(struct target_block targets[128]) {
 }
 
 void execute(struct target_block current) {
+	
 	for (int i = 0; i < current.dep_count; i++) {
 		for (int j = 0; j < targetLength; j++) {
 			if (targets[j].name != NULL) {
@@ -82,20 +87,67 @@ void execute(struct target_block current) {
 			}
 		}
 	}
+	
 	for (int i = 0; i < current.recipe_count; i++) {
 		if (current.recipe[i] != NULL) {
-			// THIS NEEDS TO EXECUTE
+			// tokenize the recipe array to make passable arguments into exec
+			char delim[] = " ";									
+			char* rectok[100];
+			char *ptr = strtok(current.recipe[i], delim);
+			int rectok_index = 0;
+			int argsize = 0;
+			// ptr points to each recipe token
+			while(ptr != NULL) {
+				rectok[rectok_index] = ptr;
+				rectok_index++;
+				printf("%s\n", ptr);
+				ptr = strtok(NULL, delim);
+			}
+			
+			const char *cmd = rectok[0];	// set the first cmd parameter of execv
+			
+			for (int j = 1; j < 100 ; j++) {	// find the size of the arg array
+				if (rectok[j] == NULL) {
+					break;
+				}
+				else {
+					argsize++;
+				}
+			}
+			
+		const char* arg[argsize+1];	// create arg array
+		int j = 0;
+		
+		for (int h = 1; h < argsize ; h++, j++) {	// make the argument array with the tokenized recipe
+			arg[j] = rectok[h];
+		}
+		
+		// now we have const char cmd* and const char args*
+		
+		pid_t kidpid = fork();	// create child process
+		
+		if (kidpid > 0) {		// if in parent wait
+			wait(NULL);
+		}
+		
+		else {					// in child, execute 
+			printf("argsize: %d\n", argsize);
+			execv(cmd, arg);
+			exit(1);
+		}
+
+
 		}
 	}
 }
+
 //$./mymake Makefile target
 int executeTarget(struct target_block targets[128], char* tar) {
 	for(int i = 0; i < targetLength; i++) {
 		if (targets[i].name != NULL) {
 			if (compareStr(targets[i].name, tar) == 0) {
 				printRecipes(targets[i]);
-				printf("NEED TO IMPLEMENT EXECUTE\n");
-				// NEED TO IMPLEMENT (Call the printRecipes offshoot method that executes instead of prints with this target[i])
+				execute(targets[i]);
 				return 0;
 			}
 		}
@@ -107,6 +159,9 @@ int executeTarget(struct target_block targets[128], char* tar) {
 //Validate the input arguments, bullet proof the program
 int main(int argc, char *argv[])
 {
+	if (argc < 2) {
+		printf("Too little arguments given\n");
+	}
 
 	//$./mymake Makefile
 	if (argc == 2 && !process_file(argv[1])) {
@@ -119,7 +174,7 @@ int main(int argc, char *argv[])
 		if (strncmp(argv[1], "-p", 2) && strncmp(argv[1], "-r", 2)
 		 	 && !process_file(argv[1])) {
 				 if (!strncmp(argv[2], "-p", 2) || !strncmp(argv[2], "-r", 2)) {
-					 printf("Incorrect execution order\n");
+					 printf("Incorrect argument order\n");
 				 } else {
 					 parse(lines);
 					 executeTarget(targets, argv[2]);
