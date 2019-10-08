@@ -1,0 +1,55 @@
+---
+title: "README"
+author: "Wally Lu"
+date: "10/8/2019"
+output: html_document
+---
+
+## Purpose of our program
+
+The purpose of our program is to implement a function similar to the "Make" function. The user is to run the program in four different possible ways, with two arguments at maximum, the "-r" and "-p" flags, a Makefile name, and target name. 
+
+## How to compile the program
+
+To compile the program have all of the code and header files in the "src" folder and the files named "Makefiles#" belong in the "test" folder, and the main test "Makefile" in "pa1". Open a terminal and go into the correct file directory ex. "user/.../Assignment1/pa1/src" and enter "gcc main.c" into the terminal to compile the program.
+
+## What Exactly our Program Does
+
+Our program takes a Makefile and reads the lines to be printed out and executed depending on the flags passed through the command line when runing the prorgam.
+
+## Team names
+
+Moti Begna, begna002 and Wally Lu, luxx0460
+
+## Contribtions
+
+Moti contributed a great deal towards working on the parsing helper function and the -r and -p flags. Wally assisted in debugging and revising for the -r flag conditions and wrote the execution portion (forking and execv) of the code for the condition of running the program without the flags.
+
+Any helper functions were written by Moti and debugged/revised by Wally. 
+
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

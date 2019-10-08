@@ -41,6 +41,7 @@ int parse(char str[MAX_LINES][LINE_SIZE]){
         isRecipe = 0;
         targetIndex++;
         recipeIndex = -1; // reset index of recipe
+        
       } else { // This is a recipe line
         isRecipe = -1;
         recipeIndex ++;
