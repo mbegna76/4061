@@ -11,9 +11,9 @@ player.o: player.c
 
 renderer.o: test/renderer.c test.o
 	gcc -c test/renderer.c
-	/bin/pwd 
+	/bin/pwd
 
-mesh.o: 
+mesh.o:
 	cc -c mesh.c
 
 test.o:

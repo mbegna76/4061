@@ -19,5 +19,7 @@ typedef struct target_block {
 } target;
 
 char lines[MAX_LINES][LINE_SIZE];
+struct target_block targets[8] = {0};
+int targetLength = sizeof(targets) / sizeof(struct target_block);
 
 #endif

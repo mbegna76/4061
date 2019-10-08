@@ -3,48 +3,69 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <ctype.h>
 #include "graph.h"
 
-void removeSpaces(char* s) {
-    const char* d = s;
-    do {
-        while (*d == ' ') {
-            ++d;
-        }
-    } while (*s++ = *d++);
+char* removeSpaces(char* input){
+     while(isspace(*input)) input++;
+     return input;
+}
+
+char* removeColon(char* input){
+     char *output = input;
+     int i = 0;
+     for (i; i < strlen(input); i++) {
+       if (input[i] == ':') {
+         break;
+       }
+       output[i] = input[i];
+     }
+     output[i] = '\0';
+     return output;
 }
 
 // Currently prints the tokens in the 2d list as seperate entities
 int parse(char str[MAX_LINES][LINE_SIZE]){
   int isRecipe = -1;
+  int targetIndex = -1;
+  int recipeIndex = -1;
   for (int i = 0; i < MAX_LINES; i++) {
     // Ignore blank lines
     if (strlen(str[i]) < 2) {
       continue;
     } else {
-      // Target lines contain ':'
+      // This is a target line contain ':'
       if (strstr(str[i], ":") != NULL) {
         isRecipe = 0;
-        printf("-----This is a target line-----\n");
-      } else {
+        targetIndex++;
+        recipeIndex = -1; // reset index of recipe
+      } else { // This is a recipe line
         isRecipe = -1;
-        printf("-----This is a recipe line-----\n");
+        recipeIndex ++;
       }
-      // Tokenize the dependancies
+      // This is a target string
       if (!isRecipe) {
         char delim[] = " ";
 
         char *ptr = strtok(str[i], delim);
 
+        int firstToken = 1;
+        int dependIndex = 0;
         // ptr points to each token
         while(ptr != NULL)
         {
-          removeSpaces(ptr);
-          printf("%s\n", ptr);
+          //only the first token is the targetName
+          if (firstToken == 1) {
+            targets[targetIndex].name = removeColon(ptr);
+            firstToken--;
+          } else {
+            targets[targetIndex].depend[dependIndex] = ptr;
+            dependIndex++;
+          }
           ptr = strtok(NULL, delim);
         }
       } else {
-        printf("%s\n", str[i]);
+        targets[targetIndex].recipe[recipeIndex] = removeSpaces(str[i]);
       }
     }
   }

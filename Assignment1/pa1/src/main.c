@@ -25,6 +25,27 @@ int process_file(char *fname)
 	return 0;
 }
 
+void printTargets(struct target_block items[8]) {
+	for(int i = 0; i < targetLength; i++) {
+		if (targets[i].name != NULL) {
+			printf("\nTarget: ");
+			printf("%s \n\n", targets[i].name);
+			printf("  Dependancies:\n");
+			for (int j = 0; j < MAX_DEP; j++) {
+				if (targets[i].depend[j] != NULL) {
+					printf("    %s\n", targets[i].depend[j]);
+				}
+			}
+			printf("  Recipes:\n");
+			for (int j = 0; j < MAX_RECIPES_PT; j++) {
+				if (targets[i].recipe[j] != NULL) {
+					printf("    %s", targets[i].recipe[j]);
+				}
+			}
+		}
+	}
+}
+
 //Validate the input arguments, bullet proof the program
 int main(int argc, char *argv[])
 {
@@ -44,6 +65,7 @@ int main(int argc, char *argv[])
 			//$./mymake -p Makefile
 			if (!process_file(argv[2])) {
 				parse(lines);
+				printTargets(targets);
 			}
 		}
 	}
