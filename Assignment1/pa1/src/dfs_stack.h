@@ -59,9 +59,11 @@ int parse(char str[MAX_LINES][LINE_SIZE]){
             targets[targetIndex].name = removeColon(ptr);
             firstToken--;
           } else {
-            targets[targetIndex].dep_count++;
-            targets[targetIndex].depend[dependIndex] = ptr;
-            dependIndex++;
+            if (strlen(ptr) >= 2) { //Excludes ':' and extra spaces
+              targets[targetIndex].dep_count++;
+              targets[targetIndex].depend[dependIndex] = ptr;
+              dependIndex++;
+            }
           }
           ptr = strtok(NULL, delim);
         }
