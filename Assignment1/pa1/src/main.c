@@ -28,18 +28,18 @@ int process_file(char *fname)
 void printTargets(struct target_block items[8]) {
 	for(int i = 0; i < targetLength; i++) {
 		if (targets[i].name != NULL) {
-			printf("\nTarget: ");
-			printf("%s \n\n", targets[i].name);
-			printf("  Dependancies:\n");
+			printf("\nTarget '%s' has %d dependancies and %d recipes\n",
+																									targets[i].name,
+																				 		 		  targets[i].dep_count,
+																					        targets[i].recipe_count);
 			for (int j = 0; j < MAX_DEP; j++) {
 				if (targets[i].depend[j] != NULL) {
-					printf("    %s\n", targets[i].depend[j]);
+					printf("Dependancy %d is %s\n", j, targets[i].depend[j]);
 				}
 			}
-			printf("  Recipes:\n");
 			for (int j = 0; j < MAX_RECIPES_PT; j++) {
 				if (targets[i].recipe[j] != NULL) {
-					printf("    %s", targets[i].recipe[j]);
+					printf("Recipe %d is %s", j, targets[i].recipe[j]);
 				}
 			}
 		}

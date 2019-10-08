@@ -59,12 +59,14 @@ int parse(char str[MAX_LINES][LINE_SIZE]){
             targets[targetIndex].name = removeColon(ptr);
             firstToken--;
           } else {
+            targets[targetIndex].dep_count++;
             targets[targetIndex].depend[dependIndex] = ptr;
             dependIndex++;
           }
           ptr = strtok(NULL, delim);
         }
       } else {
+        targets[targetIndex].recipe_count++;
         targets[targetIndex].recipe[recipeIndex] = removeSpaces(str[i]);
       }
     }
