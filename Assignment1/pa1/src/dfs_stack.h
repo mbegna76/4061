@@ -6,6 +6,47 @@
 #include <ctype.h>
 #include "graph.h"
 
+#include <limits.h>
+
+// Array Stack // 
+
+struct Stack {
+	int top;
+	unsigned capacity;
+	int* array;
+}
+
+int isFull(struct Stack* stack) {
+	return stack->top == stack->capacity - 1;
+}
+
+int isEmpty(struct Stack* stack) {
+	return stack->top == -1; 
+}
+
+void push (struct Stack* stack, int item) {
+	if (isFull(stack)) {
+		return;
+	}
+	stack->array[++stack->top] = item;
+	printf("%d pushed to stack\n", item);
+	
+}
+
+int peek(struct Stack* stack) 
+{ 
+    if (isEmpty(stack)) 
+        return INT_MIN; 
+    return stack->array[stack->top]; 
+} 
+
+
+int pop(struct Stack* stack) { 
+    if (isEmpty(stack)) 
+        return INT_MIN; 
+    return stack->array[stack->top--]; 
+} 
+
 char* removeSpaces(char* input){
      while(isspace(*input)) input++;
      return input;
@@ -23,6 +64,8 @@ char* removeColon(char* input){
      output[i] = '\0';
      return output;
 }
+
+// End of Array Stack Operation //
 
 // Currently prints the tokens in the 2d list as seperate entities
 int parse(char str[MAX_LINES][LINE_SIZE]){

@@ -28,10 +28,8 @@ int process_file(char *fname)
 void printTargets(struct target_block items[8]) {
 	for(int i = 0; i < targetLength; i++) {
 		if (targets[i].name != NULL) {
-			printf("\nTarget '%s' has %d dependancies and %d recipes\n",
-																									targets[i].name,
-																				 		 		  targets[i].dep_count,
-																					        targets[i].recipe_count);
+			printf("\nTarget '%s' has %d dependancies and %d recipes\n", 
+			targets[i].name,targets[i].dep_count, targets[i].recipe_count);
 			for (int j = 0; j < MAX_DEP; j++) {
 				if (targets[i].depend[j] != NULL) {
 					printf("Dependancy %d is %s\n", j, targets[i].depend[j]);
@@ -40,6 +38,23 @@ void printTargets(struct target_block items[8]) {
 			for (int j = 0; j < MAX_RECIPES_PT; j++) {
 				if (targets[i].recipe[j] != NULL) {
 					printf("Recipe %d is %s", j, targets[i].recipe[j]);
+				}
+			}
+		}
+	}
+}
+
+int dep[5]; // array of dependencies to keep track of dep[0] = dep 0, dep[1] = dep 1, etc. 
+
+
+
+void Traversal(struct target_block items[8]) {
+	for(int i = 0; i < targetLength; i++) {
+		if (targets[i].name != NULL) {
+			for (int j = 0; j < MAX_DEP; j++) {
+				if (targets[i].depend[j] != NULL) {
+					dep[j] = 1; // if there's dependencies, keep track of all of them
+					
 				}
 			}
 		}
