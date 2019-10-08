@@ -72,12 +72,29 @@ void printTargets(struct target_block targets[128]) {
 	}
 }
 
+void execute(struct target_block current) {
+	for (int i = 0; i < current.dep_count; i++) {
+		for (int j = 0; j < targetLength; j++) {
+			if (targets[j].name != NULL) {
+				if (compareStr(targets[j].name, current.depend[i]) == 0) {
+					execute(targets[j]);
+				}
+			}
+		}
+	}
+	for (int i = 0; i < current.recipe_count; i++) {
+		if (current.recipe[i] != NULL) {
+			// THIS NEEDS TO EXECUTE
+		}
+	}
+}
 //$./mymake Makefile target
 int executeTarget(struct target_block targets[128], char* tar) {
 	for(int i = 0; i < targetLength; i++) {
 		if (targets[i].name != NULL) {
 			if (compareStr(targets[i].name, tar) == 0) {
 				printRecipes(targets[i]);
+				printf("NEED TO IMPLEMENT EXECUTE\n");
 				// NEED TO IMPLEMENT (Call the printRecipes offshoot method that executes instead of prints with this target[i])
 				return 0;
 			}
@@ -92,9 +109,9 @@ int main(int argc, char *argv[])
 {
 
 	//$./mymake Makefile
-	//Similarly account for -r flag
-	if (argc == 2 && strncmp(argv[1], "-p", 2)) {
-		process_file(argv[1]);
+	if (argc == 2 && !process_file(argv[1])) {
+		parse(lines);
+		executeTarget(targets, targets[0].name);
 		//TODO
 	}
 	if (argc == 3) {
