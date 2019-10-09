@@ -103,9 +103,9 @@ void execute(struct target_block current) {
 				ptr = strtok(NULL, delim);
 			}
 
-			char *cmd = rectok[0];	// set the first cmd parameter of execv
+		//	char *cmd = rectok[0];	// set the first cmd parameter of execv
 
-			for (int j = 1; j < 100 ; j++) {	// find the size of the arg array
+			for (int j = 0; j < 100 ; j++) {	// find the size of the arg array
 				if (rectok[j] == NULL) {
 					break;
 				}
@@ -118,8 +118,9 @@ void execute(struct target_block current) {
 		arg[argsize] = NULL;
 		int j = 0;
 
-		for (int h = 1; h < argsize +1 ; h++, j++) {	// make the argument array with the tokenized recipe
+		for (int h = 0; h < argsize ; h++, j++) {	// make the argument array with the tokenized recipe
 			arg[j] = rectok[h];
+			printf("arg %s
 		}
 
 		// now we have const char cmd* and const char args*
@@ -131,7 +132,9 @@ void execute(struct target_block current) {
 		}
 
 		else {					// in child, execute
-			execvp(cmd, arg);
+			printf("show this if you're hitting the condition\n");
+			printf("this is arg[0]: '%s' \n", arg[0]);
+			execvp(arg[0], arg);
 			exit(1);
 		}
 
