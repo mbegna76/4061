@@ -29,6 +29,7 @@ int process_file(char *fname)
 	return 0;
 }
 
+
 int compareStr(char *str1, char *str2) {
 	for (int i = 0; i < strlen(str1); i ++) {
 		if (str1[i] != str2[i]) {
@@ -36,6 +37,23 @@ int compareStr(char *str1, char *str2) {
 		}
 	}
 	return 0;
+}
+
+//Last token of recipe string always has an extra space
+char* trimTrailing(char * str)
+{
+    int index, i;
+    index = -1;
+    i = 0;
+    while(str[i] != '\0') {
+        if(str[i] != ' ' && str[i] != '\t' && str[i] != '\n') {
+            index= i;
+        }
+        i++;
+    }
+
+    str[index + 1] = '\0';
+		return str;
 }
 
 //$./mymake -r Makefile
@@ -64,7 +82,7 @@ void printTargets(struct target_block targets[128]) {
 			targets[i].name,targets[i].dep_count, targets[i].recipe_count);
 			for (int j = 0; j < MAX_DEP; j++) {
 				if (targets[i].depend[j] != NULL) {
-					printf("Dependency %d is %s\n", j, targets[i].depend[j]);
+					printf("Dependency %d is %s\n", j, trimTrailing(targets[i].depend[j]));
 				}
 			}
 			for (int j = 0; j < MAX_RECIPES_PT; j++) {
@@ -119,8 +137,7 @@ void execute(struct target_block current) {
 		int j = 0;
 
 		for (int h = 0; h < argsize ; h++, j++) {	// make the argument array with the tokenized recipe
-			arg[j] = rectok[h];
-			printf("arg %s
+			arg[j] = trimTrailing(rectok[h]);
 		}
 
 		// now we have const char cmd* and const char args*
@@ -132,8 +149,6 @@ void execute(struct target_block current) {
 		}
 
 		else {					// in child, execute
-			printf("show this if you're hitting the condition\n");
-			printf("this is arg[0]: '%s' \n", arg[0]);
 			execvp(arg[0], arg);
 			exit(1);
 		}
