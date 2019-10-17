@@ -1,4 +1,9 @@
 #include "main.h"
+#include "phase1.c"
+#include "phase2.c"
+#include "phase3.c"
+#include "phase4.c"
+
 
 int main(int argc, char *argv[]){
 
@@ -8,7 +13,7 @@ int main(int argc, char *argv[]){
 	//phase1 - Data Partition Phase
 
 	//create pipes
-	
+
 	//just make a function call to code in phase2.c
 	//phase2 - Map Function
 
@@ -17,10 +22,10 @@ int main(int argc, char *argv[]){
 
 	//phase4
 	//wait for all processes to reach this point
-		
+
 	//just make a function call to code in phase4.c
 	//master process reports the final output
-	
+
 	return 0;
 
 }
