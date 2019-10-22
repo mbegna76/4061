@@ -9,11 +9,12 @@
 #include <sys/types.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "dirent.h"
 
 void partition(int n);
 
-void traversal(DIR* dir);
+void traversal(DIR* dir, char* dirName);
 
 
 #endif

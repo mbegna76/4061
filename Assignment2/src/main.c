@@ -8,6 +8,9 @@ int main(int argc, char *argv[]){
 		printf("Too many arguments\n");
 	} else {
 		partition(atoi(argv[2]));
+		DIR *dirp;
+		dirp = opendir(argv[1]);
+		traversal(dirp, argv[1]);
 	}
 
 

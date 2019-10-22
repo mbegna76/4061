@@ -18,6 +18,7 @@ void partition(int n) {
       sprintf(fileNameBuffer, "./MapperInput/Mapper_%d.txt", n);
       fp = fopen (fileNameBuffer,"w");
       free(fileNameBuffer);
+      fclose(fp);
       n--;
     }
 
@@ -30,6 +31,40 @@ void partition(int n) {
       fp = fopen (fileNameBuffer,"w");
       free(fileNameBuffer);
       n--;
+    }
+  }
+}
+
+void traversal(DIR* dir, char* dirName){
+  struct dirent *de;
+  while ((de = readdir(dir)) != NULL) {
+    char* str = de->d_name;
+    struct stat *states;
+    // This is a file
+    if ((strstr(str, ".") != NULL)) {
+      if (strlen(str) < 4) {
+        continue;
+      }
+      int len = strlen(dirName) + strlen(str);
+      char *fileNameBuffer = (char*)malloc(len * sizeof(char));
+      sprintf(fileNameBuffer, "%s/%s\n", dirName, str);
+      printf("THIS IS A FILE: %s", fileNameBuffer);
+      FILE *fp;
+      fp = fopen("./MapperInput/Mapper_1.txt", "a");  //write and read mode
+      fprintf(fp, fileNameBuffer);
+      fclose(fp);
+    }
+    // This is a directory
+    else if (stat(str, states) == -1){
+      DIR *dirp;
+      int len = strlen(dirName) + strlen(str) - 1;
+      char *folderNameBuffer = (char*)malloc(len * sizeof(char));
+      sprintf(folderNameBuffer, "%s/%s", dirName, str);
+      printf("THIS IS A DIR:%s\n", folderNameBuffer);
+      dirp = opendir(folderNameBuffer);
+      traversal(dirp, folderNameBuffer);
+    } else {
+      printf("THIS IS A FILE: %s\n", str);
     }
   }
 }
