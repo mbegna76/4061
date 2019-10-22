@@ -10,7 +10,7 @@ int main(int argc, char *argv[]){
 		partition(atoi(argv[2]));
 		DIR *dirp;
 		dirp = opendir(argv[1]);
-		traversal(dirp, argv[1]);
+		traversal(dirp, argv[1], atoi(argv[2]));
 	}
 
 

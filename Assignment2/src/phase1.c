@@ -8,6 +8,8 @@
 */
 #include "./../include/phase1.h"
 
+int mapperId = 1;
+
 void partition(int n) {
   mkdir("MapperInput",777);
   if (n < 10) {
@@ -35,7 +37,7 @@ void partition(int n) {
   }
 }
 
-void traversal(DIR* dir, char* dirName){
+void traversal(DIR* dir, char* dirName, int mapperTotal){
   struct dirent *de;
   while ((de = readdir(dir)) != NULL) {
     char* str = de->d_name;
@@ -49,10 +51,25 @@ void traversal(DIR* dir, char* dirName){
       char *fileNameBuffer = (char*)malloc(len * sizeof(char));
       sprintf(fileNameBuffer, "%s/%s\n", dirName, str);
       printf("THIS IS A FILE: %s", fileNameBuffer);
+
+      int mapperNameSize = 0;
+      if (mapperId >= 10){
+        mapperNameSize = 27;
+      } else {
+        mapperNameSize = 26;
+      }
+
+      char *mapperName = (char*)malloc(mapperNameSize* sizeof(char));
+      sprintf(mapperName, "./MapperInput/Mapper_%d.txt", mapperId);
       FILE *fp;
-      fp = fopen("./MapperInput/Mapper_1.txt", "a");  //write and read mode
+      fp = fopen(mapperName, "a");  //write and read mode
       fprintf(fp, fileNameBuffer);
       fclose(fp);
+
+      mapperId++;
+      if (mapperId > mapperTotal) {
+        mapperId = 1;
+      }
     }
     // This is a directory
     else if (stat(str, states) == -1){
@@ -62,7 +79,7 @@ void traversal(DIR* dir, char* dirName){
       sprintf(folderNameBuffer, "%s/%s", dirName, str);
       printf("THIS IS A DIR:%s\n", folderNameBuffer);
       dirp = opendir(folderNameBuffer);
-      traversal(dirp, folderNameBuffer);
+      traversal(dirp, folderNameBuffer, mapperTotal);
     } else {
       printf("THIS IS A FILE: %s\n", str);
     }

@@ -14,7 +14,7 @@
 
 void partition(int n);
 
-void traversal(DIR* dir, char* dirName);
+void traversal(DIR* dir, char* dirName, int mapperTotal);
 
 
 #endif
