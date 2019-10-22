@@ -1,4 +1,19 @@
 // Add Guard to header file (google what are guards)
-// Function prototypes to 
+// Function prototypes to
 //			Traverse the Folder
-//			Partition the text file paths to 'm' files 
+//			Partition the text file paths to 'm' files
+#ifndef PHASE1_H
+#define PHASE1_H
+
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include "dirent.h"
+
+void partition(int n);
+
+void traversal(DIR* dir);
+
+
+#endif

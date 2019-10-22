@@ -1,4 +1,4 @@
-#include "phase3.h"
+#include "./../include/phase3.h"
 // You are free to use your own logic. The following points are just for getting started
 /* Reduce Function
 	1)	The reducer receives the list from 'm' mappers via pipes

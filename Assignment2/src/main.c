@@ -1,11 +1,16 @@
-#include "main.h"
-#include "phase1.c"
-#include "phase2.c"
-#include "phase3.c"
-#include "phase4.c"
+#include "./../include/main.h"
 
 
 int main(int argc, char *argv[]){
+	if (argc < 3) {
+		printf("Too little arguments\n");
+	} else if (argc > 3){
+		printf("Too many arguments\n");
+	} else {
+		partition(atoi(argv[2]));
+	}
+
+
 
 	// argument count check
 
