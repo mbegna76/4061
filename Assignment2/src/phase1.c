@@ -11,8 +11,8 @@
 int mapperId = 1;
 
 void partition(int n) {
-  mkdir("MapperInput",777);
-  if (n < 10) {
+  mkdir("MapperInput",ACCESSPERMS);
+  if (n < 10) { // Number of mappers passed through are less than 10
     while (n > 0) {
       FILE * fp;
       int i;
@@ -24,7 +24,7 @@ void partition(int n) {
       n--;
     }
 
-  } else {
+  } else { // Number of mapeprs passed through are greater than 10
     while (n > 0) {
       FILE * fp;
       int i;

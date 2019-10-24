@@ -1,0 +1,14 @@
+./../Testcases/TestCase2/F10/xhq.txt
+./../Testcases/TestCase2/.DS_Store
+./../Testcases/TestCase2/F4/xcx.txt
+./../Testcases/TestCase2/F3/xcg.txt
+./../Testcases/TestCase2/F2/xbb.txt
+./../Testcases/TestCase2/F2/xar.txt
+./../Testcases/TestCase2/F5/xdm.txt
+./../Testcases/TestCase2/F9/xgu.txt
+./../Testcases/TestCase2/F7/xer.txt
+./../Testcases/TestCase2/F7/xey.txt
+./../Testcases/TestCase2/F6/xei.txt
+./../Testcases/TestCase2/F1/xaa.txt
+./../Testcases/TestCase2/F8/xfl.txt
+./../Testcases/TestCase2/F8/xfu.txt

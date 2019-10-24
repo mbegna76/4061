@@ -1,6 +1,6 @@
 IDIR = ../include
 
-CC = gcc
+CC = GCC
 CFLAGS = -g -I$(IDIR)
 
 ODIR = obj

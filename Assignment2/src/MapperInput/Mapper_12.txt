@@ -1,0 +1,13 @@
+./../Testcases/TestCase2/F10/xgy.txt
+./../Testcases/TestCase2/F4/xcp.txt
+./../Testcases/TestCase2/F3/xbs.txt
+./../Testcases/TestCase2/F3/xbz.txt
+./../Testcases/TestCase2/F2/xbm.txt
+./../Testcases/TestCase2/F5/xds.txt
+./../Testcases/TestCase2/F9/xgk.txt
+./../Testcases/TestCase2/F9/xgr.txt
+./../Testcases/TestCase2/F7/xff.txt
+./../Testcases/TestCase2/F6/xdw.txt
+./../Testcases/TestCase2/F1/xah.txt
+./../Testcases/TestCase2/F1/xbj.txt
+./../Testcases/TestCase2/F8/xfp.txt
