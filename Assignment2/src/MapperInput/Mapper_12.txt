@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ./../Testcases/TestCase2/F1/xal.txt
 ./../Testcases/TestCase2/F10/xho.txt
 ./../Testcases/TestCase2/F3/xbp.txt
@@ -6,3 +7,18 @@
 ./../Testcases/TestCase2/F6/xem.txt
 ./../Testcases/TestCase2/F8/xfl.txt
 ./../Testcases/TestCase2/F9/xgk.txt
+=======
+./../Testcases/TestCase2/F10/xgy.txt
+./../Testcases/TestCase2/F4/xcp.txt
+./../Testcases/TestCase2/F3/xbs.txt
+./../Testcases/TestCase2/F3/xbz.txt
+./../Testcases/TestCase2/F2/xbm.txt
+./../Testcases/TestCase2/F5/xds.txt
+./../Testcases/TestCase2/F9/xgk.txt
+./../Testcases/TestCase2/F9/xgr.txt
+./../Testcases/TestCase2/F7/xff.txt
+./../Testcases/TestCase2/F6/xdw.txt
+./../Testcases/TestCase2/F1/xah.txt
+./../Testcases/TestCase2/F1/xbj.txt
+./../Testcases/TestCase2/F8/xfp.txt
+>>>>>>> a7278b34c7db549d8c54820dc381a6c0397c2285
