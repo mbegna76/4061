@@ -7,10 +7,24 @@ int main(int argc, char *argv[]){
 	} else if (argc > 3){
 		printf("Too many arguments\n");
 	} else {
+		//phase1 - Data Partition Phase
 		partition(atoi(argv[2]));
 		DIR *dirp;
 		dirp = opendir(argv[1]);
 		traversal(dirp, argv[1], atoi(argv[2]));
+
+		//phase2 - Map Function
+		//Creating Pipes to pass to phase2
+		int p[atoi(argv[2])*2];
+		for (int i = 0; i < atoi(argv[2]); i++) {
+			pipe(p + (2 * i));
+		}
+		int processValue = MaptoProc(atoi(argv[2]), p);
+
+		//phase3 - Reduce Function
+		if (processValue == 1) {
+			processPipe(p, atoi(argv[2]));
+		}
 	}
 
 

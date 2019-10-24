@@ -1,0 +1,8 @@
+./../Testcases/TestCase2/F1/xap.txt
+./../Testcases/TestCase2/F2/xaq.txt
+./../Testcases/TestCase2/F3/xbt.txt
+./../Testcases/TestCase2/F4/xcs.txt
+./../Testcases/TestCase2/F5/xdr.txt
+./../Testcases/TestCase2/F7/xeq.txt
+./../Testcases/TestCase2/F8/xfp.txt
+./../Testcases/TestCase2/F9/xgo.txt

@@ -1,0 +1,8 @@
+./../Testcases/TestCase2/F10/xhb.txt
+./../Testcases/TestCase2/F2/xay.txt
+./../Testcases/TestCase2/F3/xcb.txt
+./../Testcases/TestCase2/F4/xda.txt
+./../Testcases/TestCase2/F6/xdz.txt
+./../Testcases/TestCase2/F7/xey.txt
+./../Testcases/TestCase2/F8/xfx.txt
+./../Testcases/TestCase2/F9/xgw.txt

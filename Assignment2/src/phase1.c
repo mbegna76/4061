@@ -32,6 +32,7 @@ void partition(int n) {
       sprintf(fileNameBuffer, "./MapperInput/Mapper_%d.txt", n);
       fp = fopen (fileNameBuffer,"w");
       free(fileNameBuffer);
+      fclose(fp);
       n--;
     }
   }
@@ -50,7 +51,6 @@ void traversal(DIR* dir, char* dirName, int mapperTotal){
       int len = strlen(dirName) + strlen(str);
       char *fileNameBuffer = (char*)malloc(len * sizeof(char));
       sprintf(fileNameBuffer, "%s/%s\n", dirName, str);
-      printf("THIS IS A FILE: %s", fileNameBuffer);
 
       int mapperNameSize = 0;
       if (mapperId >= 10){
@@ -74,14 +74,11 @@ void traversal(DIR* dir, char* dirName, int mapperTotal){
     // This is a directory
     else if (stat(str, states) == -1){
       DIR *dirp;
-      int len = strlen(dirName) + strlen(str) - 1;
+      int len = strlen(dirName) + strlen(str) + 1;
       char *folderNameBuffer = (char*)malloc(len * sizeof(char));
       sprintf(folderNameBuffer, "%s/%s", dirName, str);
-      printf("THIS IS A DIR:%s\n", folderNameBuffer);
       dirp = opendir(folderNameBuffer);
       traversal(dirp, folderNameBuffer, mapperTotal);
-    } else {
-      printf("THIS IS A FILE: %s\n", str);
     }
   }
 }
