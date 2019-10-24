@@ -1,3 +1,8 @@
+/*test machine: CSELAB_machine_name * date: 10/25/19
+* name: Moti Begna , Wally Lu
+* x500: begna002 , luxx0460 */
+
+
 #include "./../include/main.h"
 
 
