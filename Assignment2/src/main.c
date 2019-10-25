@@ -27,9 +27,12 @@ int main(int argc, char *argv[]){
 		int processValue = MaptoProc(atoi(argv[2]), p);
 
 		//phase3 - Reduce Function
+		//only reducer process calls phase3
 		if (processValue == 1) {
 			processPipe(p, atoi(argv[2]));
 		}
+		// phase4
+		finalResult();
 	}
 
 

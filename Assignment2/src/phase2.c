@@ -12,6 +12,7 @@ char alphabet[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', '
 
 int MaptoProc(int mapperTotal, int p[]) { // Function to create an array of processes
   pid_t mappedProcs[mapperTotal];
+  int status;
 
   // Create 'mapperTotal' pipes
 
@@ -60,12 +61,14 @@ int MaptoProc(int mapperTotal, int p[]) { // Function to create an array of proc
                 }
               }
             }
+            fclose (tp);
           }
           write(p[pipeWriteIndex], structList, 26*sizeof(dict));
 
           free(fileNameBuffer);
           fclose(fp);
-          wait(NULL);
+          int returnStatus;
+          waitpid(mappedProcs[i], &returnStatus, 0);
           exit(1);
         } else {
           i++;
@@ -78,6 +81,8 @@ int MaptoProc(int mapperTotal, int p[]) { // Function to create an array of proc
     for (int i = 1; i < mapperTotal*2; i+=2) {
       close(p[i]);
     }
+    // For whatever reason, wait()/waitpid() doesn't work
+    sleep(.5); //THIS IS TEMPORARY--or maybe permenant...idk
   }
   //This is the reducer process
   else {

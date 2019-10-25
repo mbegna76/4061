@@ -1,8 +1,0 @@
-./../Testcases/TestCase2/F1/xbj.txt
-./../Testcases/TestCase2/F2/xau.txt
-./../Testcases/TestCase2/F3/xbx.txt
-./../Testcases/TestCase2/F4/xcw.txt
-./../Testcases/TestCase2/F5/xdv.txt
-./../Testcases/TestCase2/F7/xeu.txt
-./../Testcases/TestCase2/F8/xft.txt
-./../Testcases/TestCase2/F9/xgs.txt
