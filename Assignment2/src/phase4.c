@@ -7,7 +7,6 @@
 */
 
 void finalResult() {
-  printf("This is the master\n");
   int out = open("FinalResult.txt", O_RDWR|O_CREAT|O_TRUNC);
   int tempOut = dup(fileno(stdout));
   dup2(out, fileno(stdout));
@@ -31,7 +30,6 @@ void finalResult() {
 
   //Restore standard io;
   dup2(tempOut, fileno(stdout));
-  printf("Done\n");
 
   fclose(in);
 }

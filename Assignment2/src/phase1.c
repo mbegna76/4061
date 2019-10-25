@@ -84,7 +84,7 @@ void traversal(DIR* dir, char* dirName, int mapperTotal){
     }
   }
   if (dirCount <3) {
-    printf("This folder is empty\n");
+    printf("The %s folder is empty\n", dirName);
     exit(1);
   }
 }

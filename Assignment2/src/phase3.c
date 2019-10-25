@@ -29,7 +29,6 @@ void processPipe(int p[], int mapperTotal){
     free(fileNameBuffer);
   }
   fclose(fp);
-  printf("This is the reducer \n");
 
 
   exit(1);
