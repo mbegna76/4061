@@ -82,7 +82,7 @@ int MaptoProc(int mapperTotal, int p[]) { // Function to create an array of proc
       close(p[i]);
     }
     // For whatever reason, wait()/waitpid() doesn't work
-    sleep(.5); //THIS IS TEMPORARY--or maybe permenant...idk
+    sleep(1); //THIS IS TEMPORARY--or maybe permenant...idk
   }
   //This is the reducer process
   else {

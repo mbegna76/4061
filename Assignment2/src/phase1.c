@@ -9,6 +9,7 @@
 #include "./../include/phase1.h"
 
 int mapperId = 1;
+int dirCount = 0;
 
 void partition(int n) {
   mkdir("MapperInput",ACCESSPERMS);
@@ -41,6 +42,7 @@ void partition(int n) {
 void traversal(DIR* dir, char* dirName, int mapperTotal){
   struct dirent *de;
   while ((de = readdir(dir)) != NULL) {
+    dirCount ++;
     char* str = de->d_name;
     struct stat *states;
     // This is a file
@@ -80,5 +82,9 @@ void traversal(DIR* dir, char* dirName, int mapperTotal){
       dirp = opendir(folderNameBuffer);
       traversal(dirp, folderNameBuffer, mapperTotal);
     }
+  }
+  if (dirCount <3) {
+    printf("This folder is empty\n");
+    exit(1);
   }
 }
