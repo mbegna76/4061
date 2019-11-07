@@ -4,7 +4,7 @@
 
 /*
 header.h, header for all source files
-it will: 
+it will:
 - structure definition
 - global variable, lock declaration (extern)
 - function declarations
