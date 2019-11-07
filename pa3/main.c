@@ -7,3 +7,6 @@
 #include <string.h>
 #include "header.h"
 // pthread.h included in header.h
+int main() {
+  return 0;
+}

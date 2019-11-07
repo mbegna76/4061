@@ -51,7 +51,7 @@ struct Queue* createQueue()
 }
 
 // The function to add a key k to q
-void add(struct Queue* q, char line[])
+void add(struct Queue* q, char* line)
 {
   // Create a new LL node
   struct Node* temp = newNode(line);
