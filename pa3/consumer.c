@@ -7,3 +7,19 @@
 #include <string.h>
 #include "header.h"
 // pthread.h included in header.h
+void condConsumer(void* arg) {
+
+	// // Random delay. DO NOT REMOVE!
+	// usleep(rand() % 1000);
+ //
+	struct condBuffer* cq = (struct condBuffer*) arg;
+ //
+	// // Remove an element from the buffer.
+	// pthread_mutex_lock(cq->mutex);
+	// while(num_items == 0) {
+	// 	pthread_cond_wait(cq->cond, cq->mutex);
+	// }
+	// cq->num_items--;
+	// pthread_mutex_unlock(cq->mutex);
+
+}

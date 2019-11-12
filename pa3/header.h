@@ -12,11 +12,49 @@ it will:
 
 #ifndef _HEADER_H_
 #define _HEADER_H_
+#include <pthread.h>
+#include <ctype.h>
 
-// header here..
 
+// Structure definitions
+typedef struct dictionary {
+	char letter;
+  int count;
+} dict;
 
+struct Node {
+  char line[1024];
+  struct Node* next;
+};
 
+struct Queue {
+  struct Node *front, *rear;
+};
+
+struct condBuffer {
+ char * filename;
+ int logFlag;
+ int num_items;
+	struct Queue* queue;
+	pthread_cond_t* cond;
+	pthread_mutex_t* mutex;
+};
+
+// global variables, lock declerations
+dict masterList[26];
+
+// function declerations
+struct Node* newNode(char * line);
+
+struct Queue* createQueue();
+
+void add(struct Queue* q, char* line);
+
+struct Node* extract(struct Queue* q);
+
+void condConsumer(void* arg);
+
+void condProducer(void* arg);
 
 
 

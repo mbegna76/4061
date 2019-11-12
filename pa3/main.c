@@ -6,7 +6,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "header.h"
-// pthread.h included in header.h
-int main() {
-  return 0;
+
+int main(int argc, char** argv) {
+
+ // Initializing condBuffer
+ struct condBuffer* cq = (struct condBuffer*) malloc(sizeof(struct condBuffer));
+ cq->filename = argv[2];
+ cq->num_items = 0;
+ cq->queue = createQueue();
+	cq->cond = (pthread_cond_t*) malloc(sizeof(pthread_cond_t));
+	cq->mutex = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
+	pthread_cond_init(cq->cond, NULL);
+	pthread_mutex_init(cq->mutex, NULL);
+
+ return 0;
 }

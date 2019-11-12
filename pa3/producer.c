@@ -7,3 +7,20 @@
 #include <string.h>
 #include "header.h"
 // pthread.h included in header.h
+
+void condProducer(void* arg) {
+
+	// // Random delay. DO NOT REMOVE!
+	// usleep(rand() % 1000);
+ //
+	struct condBuffer* cq = (struct condBuffer*) arg;
+ //
+ //
+	// // Add an element to the buffer.
+	// pthread_mutex_lock(cq->mutex);
+	// insert(cq->q, in);
+	// cq->num_items++;
+	// pthread_cond_signal(cq->cond);
+	// pthread_mutex_unlock(cq->mutex);
+
+}

@@ -10,25 +10,15 @@
 
 // implement shared queue, final histogram here..
 
-typedef struct dictionary {
-	char letter;
-  int count;
-} dict;
+char alphabet[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
-dict masterList[26];
-
-
-// A linked list (LL) node to store a queue entry
-struct Node {
-  char line[1024];
-  struct Node* next;
-};
-
-// The queue, front stores the front node of LL and rear stores the
-// last node of LL
-struct Queue {
-  struct Node *front, *rear;
-};
+void initializeDict() {
+	for (int j = 0; j < 26; j++) {
+			masterList[j].letter = toupper(alphabet[j]);
+			masterList[j].count = 0;
+	}
+}
 
 // A utility function to create a new linked list node.
 struct Node* newNode(char * line)
