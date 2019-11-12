@@ -44,6 +44,8 @@ struct condBuffer {
 dict masterList[26];
 
 // function declerations
+void initializeDict();
+
 struct Node* newNode(char * line);
 
 struct Queue* createQueue();

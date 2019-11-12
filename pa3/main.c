@@ -10,6 +10,7 @@
 int main(int argc, char** argv) {
 
  // Initializing condBuffer
+ initializeDict();
  struct condBuffer* cq = (struct condBuffer*) malloc(sizeof(struct condBuffer));
  cq->filename = argv[2];
  cq->num_items = 0;
