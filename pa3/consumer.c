@@ -31,7 +31,8 @@ void condConsumer(void* arg) {
     } else { //Parsing
       int front = 1; //flag for first letter in word, 1 means the next character
       // we find is a first letter
-      for(int i = 0; i < 100; i++) {
+      int lineLength = strlen((package->line));
+      for(int i = 0; i < lineLength; i++) {
         int j = 0;
         for (j; j < 26; j++) {
           if (masterList[j].letter == toupper(package->line[i])) {
@@ -44,7 +45,7 @@ void condConsumer(void* arg) {
         }
         if (j == 26) { //This means that the character isn't a letter
           if (package->line[i] != NULL){
-            printf("%c : %ld\n", package->line[i], pthread_self());
+            // printf("%c : %ld\n", package->line[i], pthread_self());
             front = 1;
           }
         }
