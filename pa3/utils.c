@@ -25,7 +25,7 @@ struct Node* newNode(char * line)
 {
   struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
   int len = sizeof(line)/sizeof(char);//Method
-  for (int i = 0; i < len; i++) {
+  for (int i = 0; i < 1024; i++) {
     temp->line[i] = line[i];
   }
   temp->next = NULL;
@@ -66,7 +66,6 @@ struct Node* extract(struct Queue* q)
 
   // Store previous front and move front one node ahead
   struct Node* temp = q->front;
-  free(temp);
 
   q->front = q->front->next;
 

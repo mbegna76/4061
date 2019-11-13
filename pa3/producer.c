@@ -12,15 +12,21 @@ void condProducer(void* arg) {
 
 	// // Random delay. DO NOT REMOVE!
 	// usleep(rand() % 1000);
- //
-	struct condBuffer* cq = (struct condBuffer*) arg;
- //
- //
-	// // Add an element to the buffer.
-	// pthread_mutex_lock(cq->mutex);
-	// insert(cq->q, in);
-	// cq->num_items++;
-	// pthread_cond_signal(cq->cond);
-	// pthread_mutex_unlock(cq->mutex);
+ struct condBuffer* cq = (struct condBuffer*) arg;
+ FILE * fp;
+ fp = fopen (cq->filename,"r");
+ char fileBuff[1024];
+ while (fgets(fileBuff, 1024, (FILE*) fp)){
+   //CS START
+   pthread_mutex_lock(cq->mutex);
+   add(cq->queue, fileBuff);
+   cq->num_items++;
+   pthread_cond_broadcast(cq->cond);
+   pthread_mutex_unlock(cq->mutex);
+   //CS END
+ }
+ add(cq->queue, "Balls");
+ cq->num_items++;
+
 
 }

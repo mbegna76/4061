@@ -32,12 +32,13 @@ struct Queue {
 };
 
 struct condBuffer {
- char * filename;
- int logFlag;
- int num_items;
-	struct Queue* queue;
-	pthread_cond_t* cond;
-	pthread_mutex_t* mutex;
+  char * filename;
+  int logFlag;
+  int EOFFLAG;
+  int num_items;
+  struct Queue* queue;
+  pthread_cond_t* cond;
+  pthread_mutex_t* mutex;
 };
 
 // global variables, lock declerations
