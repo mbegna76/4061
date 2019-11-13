@@ -59,11 +59,15 @@ int main(int argc, char** argv) {
   }
 
 
-
-  for (int i = 0; i < 26; i++) {
-    printf("%c: %d\n", masterList[i].letter, masterList[i].count);
+  void finalResult() {
+    int out = open("FinalResult.txt", O_RDWR|O_CREAT|O_TRUNC);
+    for (int i = 0; i < 26; i++) {
+      fprintf(out, "%c: %d\n", masterList[i].letter, masterList[i].count");
+      i++;
+    //  printf("%c: %d\n", masterList[i].letter, masterList[i].count);
+    }
+    fclose(out); 
   }
-
 
  return 0;
 }
