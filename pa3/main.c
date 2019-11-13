@@ -7,6 +7,19 @@
 #include <string.h>
 #include "header.h"
 
+void finalResult() {
+  FILE * fp;
+  fp = fopen ("result.txt","w+");
+  for (int i = 0; i < 26; i++) {
+    char *fileNameBuffer = (char*)malloc(sizeof(dict));
+    sprintf(fileNameBuffer, "%c %d\n", masterList[i].letter, masterList[i].count);
+    fprintf(fp, fileNameBuffer);
+    free(fileNameBuffer);
+  //  printf("%c: %d\n", masterList[i].letter, masterList[i].count);
+  }
+  fclose(fp);
+}
+
 int main(int argc, char** argv) {
   // Initializing condBuffer
   initializeDict();
@@ -21,9 +34,7 @@ int main(int argc, char** argv) {
 	pthread_mutex_init(cq->mutex, NULL);
 
   int conCount = atoi(argv[1]);
-
-  pthread_t p_thread;
-  pthread_t c_thread[conCount];
+  c_thread = (pthread_t*) malloc(conCount*sizeof(pthread_t));
 
 
   if (argc < 3 ) { // passes through too little arguments
@@ -37,6 +48,7 @@ int main(int argc, char** argv) {
   if (argc == 4 ) { // passes through standard arguments + flag
     if (!strncmp(argv[3], "-p", 2)) { //
       cq->logFlag = 1;
+      cq->fp = fopen ("log.txt","w+");
     }
     else {
       printf("Please use a valid option flag\n");
@@ -50,6 +62,13 @@ int main(int argc, char** argv) {
 
   pthread_create(&p_thread, NULL, condProducer, (void*) cq);
   for (int i=0; i < conCount; i++) {
+    if (cq->logFlag == 1) {
+      char *fileNameBuffer = (char*)malloc(60*sizeof(char));
+      sprintf(fileNameBuffer, "consumer %d\n", i);
+      fprintf(cq->fp, fileNameBuffer);
+      free(fileNameBuffer);
+    }
+    consumerIdInc = i;
 		pthread_create(&c_thread[i], NULL, condConsumer, (void*) cq);
 	}
 
@@ -57,17 +76,12 @@ int main(int argc, char** argv) {
   for (int i = 0; i < conCount; i++) {
     pthread_join(c_thread[i], NULL);
   }
-
-
-  void finalResult() {
-    int out = open("FinalResult.txt", O_RDWR|O_CREAT|O_TRUNC);
-    for (int i = 0; i < 26; i++) {
-      fprintf(out, "%c: %d\n", masterList[i].letter, masterList[i].count");
-      i++;
-    //  printf("%c: %d\n", masterList[i].letter, masterList[i].count);
-    }
-    fclose(out); 
+  free(cq->queue);
+  finalResult();
+  if (cq->logFlag == 1) {
+    fclose(cq->fp);
   }
+
 
  return 0;
 }

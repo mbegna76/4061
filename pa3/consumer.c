@@ -10,6 +10,8 @@
 
 void condConsumer(void* arg) {
   struct condBuffer* cq = (struct condBuffer*) arg;
+  int consumerId = consumerIdInc;
+  
   while (cq->EOFFLAG != 1) {
     //CS START
     pthread_mutex_lock(cq->mutex);
@@ -26,9 +28,16 @@ void condConsumer(void* arg) {
     if(!strncmp(package->line, "Balls", 5)) {
       cq->EOFFLAG = 1;
       pthread_cond_broadcast(cq->cond);
+      free(package);
       pthread_mutex_unlock(cq->mutex);
       break;
     } else { //Parsing
+      if (cq->logFlag == 1) {
+        char *fileNameBuffer = (char*)malloc(60*sizeof(char));
+        sprintf(fileNameBuffer, "consumer %d: %d\n", consumerId, package->lineNum);
+        fprintf(cq->fp, fileNameBuffer);
+        free(fileNameBuffer);
+      }
       int front = 1; //flag for first letter in word, 1 means the next character
       // we find is a first letter
       int lineLength = strlen((package->line));
@@ -52,6 +61,7 @@ void condConsumer(void* arg) {
       }
     }
     cq->num_items--;
+    free(package);
     pthread_mutex_unlock(cq->mutex);
 
     //CS END

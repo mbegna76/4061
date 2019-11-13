@@ -9,23 +9,42 @@
 // pthread.h included in header.h
 
 void condProducer(void* arg) {
-
-	// // Random delay. DO NOT REMOVE!
-	// usleep(rand() % 1000);
  struct condBuffer* cq = (struct condBuffer*) arg;
+
+   if (cq->logFlag == 1) { //Producer Launched
+     char *fileNameBuffer = (char*)malloc(10*sizeof(char));
+     sprintf(fileNameBuffer, "producer\n");
+     fprintf(cq->fp, fileNameBuffer);
+     free(fileNameBuffer);
+   }
+
  FILE * fp;
  fp = fopen (cq->filename,"r");
  char fileBuff[1024];
+ int lineNum = 0;
  while (fgets(fileBuff, 1024, (FILE*) fp)){
    //CS START
+   if (cq->logFlag == 1) {
+     char *fileNameBuffer = (char*)malloc(20*sizeof(char));
+     sprintf(fileNameBuffer, "producer %d\n", lineNum);
+     fprintf(cq->fp, fileNameBuffer);
+     free(fileNameBuffer);
+   }
    pthread_mutex_lock(cq->mutex);
-   add(cq->queue, fileBuff);
+   add(cq->queue, fileBuff, lineNum);
    cq->num_items++;
+   lineNum++;
    pthread_cond_broadcast(cq->cond);
    pthread_mutex_unlock(cq->mutex);
    //CS END
  }
- add(cq->queue, "Balls");
+ if (cq->logFlag == 1) {
+   char *fileNameBuffer = (char*)malloc(4*sizeof(char));
+   sprintf(fileNameBuffer, "-1\n", lineNum);
+   fprintf(cq->fp, fileNameBuffer);
+   free(fileNameBuffer);
+ }
+ add(cq->queue, "Balls", lineNum);
  cq->num_items++;
 
 

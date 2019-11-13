@@ -24,6 +24,7 @@ typedef struct dictionary {
 
 struct Node {
   char line[1024];
+  int lineNum;
   struct Node* next;
 };
 
@@ -36,6 +37,7 @@ struct condBuffer {
   int logFlag;
   int EOFFLAG;
   int num_items;
+  FILE * fp;
   struct Queue* queue;
   pthread_cond_t* cond;
   pthread_mutex_t* mutex;
@@ -43,15 +45,18 @@ struct condBuffer {
 
 // global variables, lock declerations
 dict masterList[26];
+pthread_t p_thread;
+pthread_t * c_thread;
+int consumerIdInc;
 
 // function declerations
 void initializeDict();
 
-struct Node* newNode(char * line);
+struct Node* newNode(char * line, int lineNum);
 
 struct Queue* createQueue();
 
-void add(struct Queue* q, char* line);
+void add(struct Queue* q, char* line, int lineNum);
 
 struct Node* extract(struct Queue* q);
 

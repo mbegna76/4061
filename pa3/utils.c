@@ -21,7 +21,7 @@ void initializeDict() {
 }
 
 // A utility function to create a new linked list node.
-struct Node* newNode(char * line)
+struct Node* newNode(char * line, int lineNum)
 {
   struct Node* temp = (struct Node*)malloc(sizeof(struct Node));
   int len = sizeof(line)/sizeof(char);//Method
@@ -29,6 +29,7 @@ struct Node* newNode(char * line)
     temp->line[i] = line[i];
   }
   temp->next = NULL;
+	temp->lineNum = lineNum;
   return temp;
 }
 
@@ -41,10 +42,10 @@ struct Queue* createQueue()
 }
 
 // The function to add a key k to q
-void add(struct Queue* q, char* line)
+void add(struct Queue* q, char* line, int lineNum)
 {
   // Create a new LL node
-  struct Node* temp = newNode(line);
+  struct Node* temp = newNode(line, lineNum);
 
   // If queue is empty, then new node is front and rear both
   if (q->rear == NULL) {
