@@ -26,12 +26,13 @@ struct tableEntry{
   int checkIO;
 }
 
-int azList = [26]; // keep track of letter counts here
-tableEntry updateStatus = [26]; // updateStatus table
+int azList[26]; // keep track of letter counts here
+struct tableEntry updateStatus[26]; // updateStatus table
 
 int main(int argc, char *argv[]) {
 
     int server_port;
+    int count;
     pthread_t threads[MAX_CONCURRENT_CLIENTS];
 
     if (argc == 2) { // 1 arguments
@@ -49,7 +50,7 @@ int main(int argc, char *argv[]) {
     // Filling server information
     struct sockaddr_in servaddr;
     servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(argv[0]);
+    servaddr.sin_port = htons(argv[1]);
     servaddr.sin_addr.s_addr = INADDR_ANY;
     bind(sockfd, (struct sockaddr *) &servaddr, sizeof(servaddr));
 
@@ -74,9 +75,9 @@ int main(int argc, char *argv[]) {
         continue;
       }
       else {
-        read(sockfd, buffer, strlen(buffer));
-        pthread_create(&threads[count], , , (void*) arg);
-        currentConn++;
+        read(sockfd, buffer, sizeof(buffer));
+    //  #pthread_create(&threads[count], , , (void*) arg);
+        count++;
       }
 
 
