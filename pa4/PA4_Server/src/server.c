@@ -12,12 +12,22 @@
 #include "../include/protocol.h"
 
 int currentConn = 0;
+int buffer[28];
 
 struct threadArg {
 	int clientfd;
 	char * clientip;
 	int clientport;
 };
+
+struct tableEntry{
+  int mapperID;
+  int numUpdates;
+  int checkIO;
+}
+
+int azList = [26]; // keep track of letter counts here
+tableEntry updateStatus = [26]; // updateStatus table
 
 int main(int argc, char *argv[]) {
 
@@ -64,7 +74,8 @@ int main(int argc, char *argv[]) {
         continue;
       }
       else {
-        // pthread_create(&threads[count], NULL, function, (void*) arg);
+        read(sockfd, buffer, strlen(buffer));
+        pthread_create(&threads[count], , , (void*) arg);
         currentConn++;
       }
 

@@ -8,6 +8,7 @@
 #include "../include/protocol.h"
 
 FILE *logfp;
+int buffer[28]; // request size = 1D array with 28 entries
 
 void createLogFile(void) {
     pid_t p = fork();
@@ -57,6 +58,15 @@ int main(int argc, char *argv[]) {
     // connect
     if (connect(sockfd, (struct sockaddr *) &address, sizeof(address)) == 0) {
     // do the thing
+      pid_t master = fork(); // create master process
+      if (getpid(master) == -1 ) { // if we're in the first child process begin spawning other processes
+        for(int i = 0; i < argv[2]; i++) {
+          fork()
+
+        }
+
+        }
+      }
     }
 
     // create log file
@@ -66,7 +76,8 @@ int main(int argc, char *argv[]) {
     traverseFS(mappers, folderName);
 
     // Phase2 - Mapper Clients's Deterministic Request Handling
-
+    write(sockfd, buffer, strlen(buffer));
+  //  if read(sockfd, buffer, strlen(buffer));
     // Phase3 - Master Client's Dynamic Request Handling (Extra Credit)
 
 
