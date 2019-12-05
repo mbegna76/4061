@@ -11,8 +11,9 @@
 #include <arpa/inet.h>
 #include "../include/protocol.h"
 
+#define MAX_MSG_SIZE 1000
+
 int currentConn = 0;
-int buffer[28];
 
 struct threadArg {
 	int clientfd;
@@ -28,6 +29,21 @@ struct tableEntry{
 
 int azList[26]; // keep track of letter counts here
 struct tableEntry updateStatus[26]; // updateStatus table
+
+void * threadFunction(void * arg) {
+	struct threadArg * tArg = (struct threadArg *) arg;
+	char readbuf[28];
+
+	read(tArg->clientfd, readbuf, MAX_MSG_SIZE);
+	printf("%s\n", readbuf);
+	// write(tArg->clientfd, (void *) "Acknowledge", 12);
+	// close(tArg->clientfd);
+	// free(tArg);
+	// pthread_mutex_lock(&currentConn_lock);
+	// currentConn--;
+	// pthread_mutex_unlock(&currentConn_lock);
+	return NULL;
+}
 
 int main(int argc, char *argv[]) {
 
@@ -50,8 +66,8 @@ int main(int argc, char *argv[]) {
     // Filling server information
     struct sockaddr_in servaddr;
     servaddr.sin_family = AF_INET;
-    servaddr.sin_port = htons(argv[1]);
-    servaddr.sin_addr.s_addr = INADDR_ANY;
+    servaddr.sin_port = htons(server_port);
+    servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     bind(sockfd, (struct sockaddr *) &servaddr, sizeof(servaddr));
 
     // Server (Reducer) code
@@ -75,12 +91,12 @@ int main(int argc, char *argv[]) {
         continue;
       }
       else {
-        read(sockfd, buffer, sizeof(buffer));
-				printf("RECIEVED\n");
+				printf("CONNECTION ESTABLISHED\n");
+				// pthread_create(&threads[currentConn], NULL, threadFunction, (void*) arg);
     //  #pthread_create(&threads[count], , , (void*) arg);
         count++;
       }
 
-    return 0;
   }
+	return 0;
 }

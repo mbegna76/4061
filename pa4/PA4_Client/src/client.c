@@ -55,9 +55,6 @@ int main(int argc, char *argv[]) {
       exit(1);
   }
 
-	// create TCP socket
-  int sockfd = socket(AF_INET , SOCK_STREAM , 0);
-
   // create log file
   createLogFile();
 
@@ -65,11 +62,7 @@ int main(int argc, char *argv[]) {
   traverseFS(mappers, folderName);
 
 
-  // specify address to connect to
-  struct sockaddr_in address;
-	address.sin_family = AF_INET;
-	address.sin_port = htons(server_port);
-	address.sin_addr.s_addr = INADDR_ANY;
+
 
   // Phase2 - Mapper Clients's Deterministic Request Handling
   pid_t mappedProcs[mappers]; // create mapper processes
@@ -97,26 +90,39 @@ int main(int argc, char *argv[]) {
          request[m] = 0;
        }
 
-
-       while (fscanf(fp, "%s", fileBuff) != -1){
-         FILE * tp;
-         tp = fopen(fileBuff, "r");
-         while (fscanf(tp, "%s", lineBuff) != -1){
-           for (int j = 0; j < 26; j++) {
-             if (toupper(alphabet[j]) == toupper(lineBuff[0])) {
-               request[j+2] =  request[j+2] + 1;
-               break;
-             }
-           }
-         }
-         fclose (tp);
-       }
-       //DO THE CONNECTIONS AND SENDING IN HERE -> Structlist contains the count, but we can chnge how we send the values
-       //REQUEST NOW CONTAINS THE DATA TO SEND
-       printf("A: %d\n", request[2]);
+       // create TCP socket
+       int sockfd = socket(AF_INET , SOCK_STREAM , 0);
+       // specify address to connect to
+       struct sockaddr_in address;
+       address.sin_family = AF_INET;
+       address.sin_port = htons(server_port);
+       address.sin_addr.s_addr = inet_addr(server_ip);
 
        if (connect(sockfd, (struct sockaddr *) &address, sizeof(address)) == 0) {
+
+         // Loops through the .txt files in the mapper file
+         while (fscanf(fp, "%s", fileBuff) != -1){
+           FILE * tp;
+           tp = fopen(fileBuff, "r");
+           // Loops through the lines in a .txt file
+           while (fscanf(tp, "%s", lineBuff) != -1){
+             for (int j = 0; j < 26; j++) {
+               if (toupper(alphabet[j]) == toupper(lineBuff[0])) {
+                 request[j+2] =  request[j+2] + 1;
+                 break;
+               }
+             }
+           }
+           //SEND UPDATE TO SERVER
+           fclose (tp);
+         }
+         //DO THE CONNECTIONS AND SENDING IN HERE -> Structlist contains the count, but we can chnge how we send the values
+         //REQUEST NOW CONTAINS THE DATA TO SEND
+         printf("A: %d\n", request[2]);
+
          write(sockfd, request, strlen(request));
+         close(sockfd);
+
        } else {
          		perror("Connection failed!");
          }
