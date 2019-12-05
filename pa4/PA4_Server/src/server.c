@@ -24,7 +24,7 @@ struct tableEntry{
   int mapperID;
   int numUpdates;
   int checkIO;
-}
+};
 
 int azList[26]; // keep track of letter counts here
 struct tableEntry updateStatus[26]; // updateStatus table
@@ -76,10 +76,10 @@ int main(int argc, char *argv[]) {
       }
       else {
         read(sockfd, buffer, sizeof(buffer));
+				printf("RECIEVED\n");
     //  #pthread_create(&threads[count], , , (void*) arg);
         count++;
       }
-
 
     return 0;
   }
