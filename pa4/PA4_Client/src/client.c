@@ -112,20 +112,23 @@ int main(int argc, char *argv[]) {
                  break;
                }
              }
+             //SEND UPDATE TO SERVER
+             write(sockfd, request, REQUEST_MSG_SIZE*4);
+             for (int i = 0; i < 28; i++) {
+               request[i] = 0;
+             }
            }
-           //SEND UPDATE TO SERVER
            fclose (tp);
          }
          //DO THE CONNECTIONS AND SENDING IN HERE -> Structlist contains the count, but we can chnge how we send the values
          //REQUEST NOW CONTAINS THE DATA TO SEND
          printf("A: %d\n", request[2]);
-
-         write(sockfd, request, strlen(request));
          close(sockfd);
 
-       } else {
+       }
+       else {
          		perror("Connection failed!");
-         }
+       }
 
 
        free(fileNameBuffer);
@@ -133,7 +136,9 @@ int main(int argc, char *argv[]) {
        int returnStatus;
        waitpid(mappedProcs[i], &returnStatus, 0);
        exit(1);
-     }  else {
+     }
+
+     else {
           i++;
           mapperIndex++;
           continue;

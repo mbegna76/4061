@@ -14,6 +14,8 @@
 #define MAX_MSG_SIZE 1000
 
 int currentConn = 0;
+int count = 0; // help us find spots for a new thread he's like a valet
+pthread_mutex_t currentConn_lock;
 
 struct threadArg {
 	int clientfd;
@@ -32,16 +34,19 @@ struct tableEntry updateStatus[26]; // updateStatus table
 
 void * threadFunction(void * arg) {
 	struct threadArg * tArg = (struct threadArg *) arg;
-	char readbuf[28];
+	int readbuf[28];
 
 	read(tArg->clientfd, readbuf, MAX_MSG_SIZE);
-	printf("%s\n", readbuf);
+  for(int i =0; i< 28; i++) {
+    printf("%d ", readbuf[i]);
+  }
+  printf("\n");
 	// write(tArg->clientfd, (void *) "Acknowledge", 12);
 	// close(tArg->clientfd);
 	// free(tArg);
-	// pthread_mutex_lock(&currentConn_lock);
-	// currentConn--;
-	// pthread_mutex_unlock(&currentConn_lock);
+	pthread_mutex_lock(&currentConn_lock);
+	currentConn--;
+	pthread_mutex_unlock(&currentConn_lock);
 	return NULL;
 }
 
@@ -50,6 +55,7 @@ int main(int argc, char *argv[]) {
     int server_port;
     int count;
     pthread_t threads[MAX_CONCURRENT_CLIENTS];
+    pthread_mutex_init(&currentConn_lock, NULL);
 
     if (argc == 2) { // 1 arguments
         server_port = atoi(argv[1]);
@@ -86,15 +92,17 @@ int main(int argc, char *argv[]) {
 
       if(currentConn == MAX_CONCURRENT_CLIENTS) {
         printf("Server is too busy\n");
+        count = 0;
         close(clientfd);
         free(arg);
         continue;
       }
       else {
-				printf("CONNECTION ESTABLISHED\n");
-				// pthread_create(&threads[currentConn], NULL, threadFunction, (void*) arg);
-    //  #pthread_create(&threads[count], , , (void*) arg);
         count++;
+        pthread_create(&threads[count], NULL, threadFunction, (void*) arg);
+        pthread_mutex_lock(&currentConn_lock);
+        currentConn++;
+        pthread_mutex_unlock(&currentConn_lock);
       }
 
   }
