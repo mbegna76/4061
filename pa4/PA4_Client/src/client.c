@@ -59,15 +59,14 @@ int main(int argc, char *argv[]) {
     if (connect(sockfd, (struct sockaddr *) &address, sizeof(address)) == 0) {
     // do the thing
       pid_t master = fork(); // create master process
-      if (getpid(master) == -1 ) { // if we're in the first child process begin spawning other processes
-        for(int i = 0; i < argv[2]; i++) {
-          fork()
+      if (getpid() == -1 ) { // if we're in the first child process begin spawning other processes
+        for(int i = 0; i < argc; i++) {
+          fork();
 
         }
 
         }
       }
-    }
 
     // create log file
     createLogFile();
@@ -76,12 +75,11 @@ int main(int argc, char *argv[]) {
     traverseFS(mappers, folderName);
 
     // Phase2 - Mapper Clients's Deterministic Request Handling
-    write(sockfd, buffer, strlen(buffer));
+    write(sockfd, buffer, sizeof(buffer));
   //  if read(sockfd, buffer, strlen(buffer));
     // Phase3 - Master Client's Dynamic Request Handling (Extra Credit)
 
 
     fclose(logfp);
     return 0;
-
 }
