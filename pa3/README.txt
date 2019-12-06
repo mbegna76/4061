@@ -11,7 +11,7 @@ alternatively to run the program and print a log file enter './wcs #consumers te
 
 * Contributions *
 
-Wally and Moti worked on both the producer and consumer files together, discussing most of the logic
+Wally and Moti worked on both the producer and consumer code together, discussing most of the logic
 and code together for 4.0-4.3. Wally worked on the code for step 4.4 of printing out the Histogram in a
 text file and Moti debugged and revised it. Moti worked on the code for step 4.5 of creating and
 printing the log file and Wally reviewed and debugged it.

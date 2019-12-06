@@ -1,6 +1,6 @@
-/*test machine: CSELAB_machine_name * date: mm/dd/yy
-* name: full_name1 , [full_name2]
-* x500: id_for_first_name , [id_for_second_name] */
+/*test machine: CSELAB_machine_name * date: 11/13/19
+* name: Moti Begna , Wally Lu
+* x500: begna002 , luxx0460 */
 
 #include <stdio.h>
 #include <stdlib.h>

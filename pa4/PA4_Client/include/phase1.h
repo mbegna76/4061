@@ -7,6 +7,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <sys/wait.h>
+
 
 #define DIRNULL NULL
 #define FILENULL NULL

@@ -12,6 +12,7 @@ int mapperId = 1;
 int dirCount = 0;
 
 void partition(int n) {
+  system("rm -rf MapperInput");
   mkdir("MapperInput",ACCESSPERMS);
   if (n < 10) { // Number of mappers passed through are less than 10
     while (n > 0) {
