@@ -4,7 +4,7 @@ Moti Begna, begna002 and Wally Lu, luxx0460
 
 * How to compile the program *
 
-To compile the program navigate to to the PA4_Server and PA4_Client directories in two
+To compile the program navigate to the PA4_Server and PA4_Client directories in two
 different terminal windows  and type 'make' and hit enter into the command line.
 This will compile the program with all necessary C and header files. To run the program on a
 single machine, use two terminal windows and in one, type in and run './server port#' in one where port#

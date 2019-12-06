@@ -1,3 +1,7 @@
+/*test machine: CSELAB_machine_name * date: 12/06/19
+* name: Moti Begna , Wally Lu
+* x500: begna002 , luxx0460 */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,9 +10,8 @@
 #include <arpa/inet.h>
 #include <ctype.h>
 #include <sys/types.h>
-  #include <sys/wait.h>
+#include <sys/wait.h>
 #include "../include/protocol.h"
-#include "phase1.c"
 
 FILE *logfp;
 int request[REQUEST_MSG_SIZE]; // request size = 1D array with 28 entries

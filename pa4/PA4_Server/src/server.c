@@ -1,3 +1,7 @@
+/*test machine: CSELAB_machine_name * date: 12/06/19
+* name: Moti Begna , Wally Lu
+* x500: begna002 , luxx0460 */
+
 #include <stdio.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -156,7 +160,6 @@ int * checkOut(int request[]) {
 
 	}
 
-
 }
 
 void * threadFunction(void * arg) {
@@ -170,6 +173,7 @@ void * threadFunction(void * arg) {
 
 	//ERROR: Invalid Mapper ID
 	if (readbuf[RQS_MAPPER_PID] <= 0) {
+		returnBuf = (int*)malloc(sizeof(int)*LONG_RESPONSE_MSG_SIZE);
 		returnBuf[RSP_COMMAND_ID] = readbuf[RQS_COMMAND_ID];
 		returnBuf[RSP_CODE] = RSP_NOK;
 		for(int i = 2; i < LONG_RESPONSE_MSG_SIZE; i++) {
@@ -177,6 +181,7 @@ void * threadFunction(void * arg) {
 		}
 		printf("[%d] Invalid Mapper ID\n", readbuf[RQS_MAPPER_PID]);
 		write(tArg->clientfd, returnBuf, REQUEST_MSG_SIZE*4);
+		free(returnBuf);
 	}
 
 	switch(readbuf[RQS_COMMAND_ID]) {
