@@ -11,7 +11,7 @@
 #include "phase1.c"
 
 FILE *logfp;
-int buffer[28]; // request size = 1D array with 28 entries
+int request[REQUEST_MSG_SIZE]; // request size = 1D array with 28 entries
 
 char alphabet[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
@@ -103,7 +103,6 @@ int main(int argc, char *argv[]) {
        fp = fopen (fileNameBuffer,"r");
        char fileBuff[255];
        char lineBuff[255];
-       int request[28];
        int* response;
        int numMessagesSent = 0;
        char *logOutput;
@@ -117,20 +116,20 @@ int main(int argc, char *argv[]) {
 
        // CHECK-IN
        //Reset request values
-       for(int m = 0; m < 28; m++) {
+       for(int m = 0; m < REQUEST_MSG_SIZE; m++) {
          request[m] = 0;
        }
-       request[0] = 1;
-       request[1] = mapperIndex;
+       request[RQS_COMMAND_ID] = CHECKIN;
+       request[RQS_MAPPER_PID] = mapperIndex;
        response = serverConnectionAndRespone(server_port, server_ip, request);
        logOutput = (char*)malloc(sizeof(char)*30);
-       sprintf(logOutput, "[%d] CHECKIN: %d %d\n", mapperIndex, response[1], response[2]);
+       sprintf(logOutput, "[%d] CHECKIN: %d %d\n", mapperIndex, response[RSP_CODE], response[RSP_DATA]);
        fputs(logOutput, logfp);
        free(logOutput);
 
 
        //Reset request values
-       for(int m = 0; m < 28; m++) {
+       for(int m = 0; m < REQUEST_MSG_SIZE; m++) {
          request[m] = 0;
        }
 
@@ -149,12 +148,12 @@ int main(int argc, char *argv[]) {
          }
 
          //SEND UPDATE TO SERVER
-         request[0] = 2;
-         request[1] = mapperIndex;
+         request[RQS_COMMAND_ID] = UPDATE_AZLIST;
+         request[RQS_MAPPER_PID] = mapperIndex;
          response = serverConnectionAndRespone(server_port, server_ip, request);
          numMessagesSent++;
          //Reset request values
-         for (int i = 0; i < 28; i++) {
+         for (int i = 0; i < REQUEST_MSG_SIZE; i++) {
            request[i] = 0;
          }
 
@@ -167,15 +166,15 @@ int main(int argc, char *argv[]) {
        free(logOutput);
 
        //GET getAZList
-       request[0] = 3;
-       request[1] = mapperIndex;
+       request[RQS_COMMAND_ID] = GET_AZLIST;
+       request[RQS_MAPPER_PID] = mapperIndex;
        response = serverConnectionAndRespone(server_port, server_ip, request);
        logOutput = (char*)malloc(sizeof(char)*20);
-       sprintf(logOutput, "[%d] GET_AZLIST: ", mapperIndex);
+       sprintf(logOutput, "[%d] GET_AZLIST: %d ", mapperIndex,  response[RSP_CODE]);
        fputs(logOutput, logfp);
        free(logOutput);
 
-       for(int i = 0; i < 28; i++) {
+       for(int i = 2; i < REQUEST_MSG_SIZE; i++) {
 
          logOutput = (char*)malloc(sizeof(char)*10);
          sprintf(logOutput, "%d ", response[i]);
@@ -189,41 +188,41 @@ int main(int argc, char *argv[]) {
 
        //GET Mapper Updates
        //Reset request values
-       for(int m = 0; m < 28; m++) {
+       for(int m = 0; m < REQUEST_MSG_SIZE; m++) {
          request[m] = 0;
        }
-       request[0] = 4;
-       request[1] = mapperIndex;
+       request[RQS_COMMAND_ID] = GET_MAPPER_UPDATES;
+       request[RQS_MAPPER_PID] = mapperIndex;
        response = serverConnectionAndRespone(server_port, server_ip, request);
        logOutput = (char*)malloc(sizeof(char)*50);
-       sprintf(logOutput, "[%d] GET_MAPPER_UPDATES: %d %d\n", mapperIndex, response[1], response[2]);
+       sprintf(logOutput, "[%d] GET_MAPPER_UPDATES: %d %d\n", mapperIndex, response[RSP_CODE], response[RSP_DATA]);
        fputs(logOutput, logfp);
        free(logOutput);
 
        //GET ALL Updates
        //Reset request values
-       for(int m = 0; m < 28; m++) {
+       for(int m = 0; m < REQUEST_MSG_SIZE; m++) {
          request[m] = 0;
        }
-       request[0] = 5;
-       request[1] = mapperIndex;
+       request[RQS_COMMAND_ID] = GET_ALL_UPDATES;
+       request[RQS_MAPPER_PID] = mapperIndex;
        response = serverConnectionAndRespone(server_port, server_ip, request);
        logOutput = (char*)malloc(sizeof(char)*50);
-       sprintf(logOutput, "[%d] GET_ALL_UPDATES: %d %d\n", mapperIndex, response[1], response[2]);
+       sprintf(logOutput, "[%d] GET_ALL_UPDATES: %d %d\n", mapperIndex, response[RSP_CODE], response[RSP_DATA]);
        fputs(logOutput, logfp);
        free(logOutput);
 
 
        // CHECK-OUT
        //Reset request values
-       for(int m = 0; m < 28; m++) {
+       for(int m = 0; m < REQUEST_MSG_SIZE; m++) {
          request[m] = 0;
        }
-       request[0] = 6;
-       request[1] = mapperIndex;
+       request[RQS_COMMAND_ID] = CHECKOUT;
+       request[RQS_MAPPER_PID] = mapperIndex;
        response = serverConnectionAndRespone(server_port, server_ip, request);
        logOutput = (char*)malloc(sizeof(char)*30);
-       sprintf(logOutput, "[%d] CHECKOUT: %d %d\n", mapperIndex, response[1], response[2]);
+       sprintf(logOutput, "[%d] CHECKOUT: %d %d\n", mapperIndex, response[RSP_CODE], response[RSP_DATA]);
        fputs(logOutput, logfp);
        free(logOutput);
 

@@ -31,123 +31,187 @@ struct tableEntry{
   int checkIO;
 };
 
-int azList[26]; // keep track of letter counts here
-struct tableEntry updateStatus[33]; // updateStatus table
+int azList[ALPHABETSIZE]; // keep track of letter counts here
+struct tableEntry updateStatus[MAX_STATUS_TABLE_LINES]; // updateStatus table
 
 int* checkIn(int request[]) {
-	int mapperId = request[1];
+	int mapperId = request[RQS_MAPPER_PID];
 	printf("[%d] CHECKIN\n", mapperId);
+	static int returnBuf[LONG_RESPONSE_MSG_SIZE];
 	//Looking for previous mapper
 	if (updateStatus[mapperId].mapperID != 0) {
+			//ERROR: Mapper Client Already Checked-In
+			if (updateStatus[mapperId].checkIO == 1) {
+				returnBuf[RSP_COMMAND_ID] = CHECKIN;
+				returnBuf[RSP_CODE] = RSP_NOK;
+				for(int i = 2; i < LONG_RESPONSE_MSG_SIZE; i++) {
+					returnBuf[i] = -1;
+				}
+				printf("[%d] Mapper Client Already Checked-In\n", mapperId);
+				return returnBuf;
+			}
 			updateStatus[mapperId].checkIO = 1;
 	} else { 	//Adding new mapper
 		updateStatus[mapperId].mapperID = mapperId;
 		updateStatus[mapperId].checkIO = 1;
 	}
-	static int returnBuf[28];
-	returnBuf[0] = 1;
-	returnBuf[1] = 0;
-	returnBuf[2] = mapperId;
+	returnBuf[RSP_COMMAND_ID] = CHECKIN;
+	returnBuf[RSP_CODE] = RSP_OK;
+	returnBuf[RQS_DATA] = mapperId;
 	return returnBuf;
 
 }
 int * updateAZList(int request[]) {
-	int mapperId = request[1];
+	int mapperId = request[RQS_MAPPER_PID];
 
 	int i, j;
 	//Update azLlist
-	for(i = 0, j = 2; i < 26; i++, j++) {
+	for(i = 0, j = 2; i < ALPHABETSIZE; i++, j++) {
 		azList[i] = azList[i] + request[j];
 	}
 	//increment updateStatus numUpdates
 	updateStatus[mapperId].numUpdates = updateStatus[mapperId].numUpdates + 1;
 
-	static int returnBuf[28];
-	returnBuf[0] = 1;
-	returnBuf[1] = 0;
-	returnBuf[2] = mapperId;
+	static int returnBuf[LONG_RESPONSE_MSG_SIZE];
+	returnBuf[RSP_COMMAND_ID] = UPDATE_AZLIST;
+	returnBuf[RSP_CODE] = RSP_OK;
+	returnBuf[RQS_DATA] = mapperId;
 	return returnBuf;
 	}
 
 int * getAZList(int request[]) {
-	int mapperId = request[1];
+	int mapperId = request[RQS_MAPPER_PID];
 	printf("[%d] GET_AZLIST\n", mapperId);
-	static int returnBuf[28];
-	returnBuf[0] = 3;
-	returnBuf[1] = 0;
+	static int returnBuf[LONG_RESPONSE_MSG_SIZE];
+	returnBuf[RSP_COMMAND_ID] = GET_AZLIST;
+	returnBuf[RSP_CODE] = RSP_OK;
 	int i, j;
-	for(i = 0, j = 2; i < 26; i++, j++) {
+	for(i = 0, j = 2; i < ALPHABETSIZE; i++, j++) {
 		returnBuf[j] = azList[i];
 	}
 	return returnBuf;
 }
 int * getMapperUpdates(int request[]) {
-	int mapperId = request[1];
+	int mapperId = request[RQS_MAPPER_PID];
 	printf("[%d] GET_MAPPER_UPDATES\n", mapperId);
-	static int returnBuf[28];
-	returnBuf[0] = 4;
-	returnBuf[1] = 0;
-	returnBuf[2] = updateStatus[mapperId].numUpdates;
-	return returnBuf;
+	static int returnBuf[LONG_RESPONSE_MSG_SIZE];
+
+	if (updateStatus[mapperId].mapperID > 0) {
+		returnBuf[RSP_COMMAND_ID] = GET_MAPPER_UPDATES;
+		returnBuf[RSP_CODE] = RSP_OK;
+		returnBuf[RQS_DATA] = updateStatus[mapperId].numUpdates;
+		return returnBuf;
+	} else { //ERROR: Mapper Not in updateStatus Table
+		returnBuf[RSP_COMMAND_ID] = GET_MAPPER_UPDATES;
+		returnBuf[RSP_CODE] = RSP_NOK;
+		for(int i = 2; i < LONG_RESPONSE_MSG_SIZE; i++) {
+			returnBuf[i] = -1;
+		}
+		printf("[%d] Mapper Not in updateStatus Table\n", mapperId);
+		return returnBuf;
+	}
 }
 int * getAllUpdates(int request[]) {
-	printf("[%d] GET_ALL_UPDATES\n", request[1]);
-	static int returnBuf[28];
-	returnBuf[0] = 5;
-	returnBuf[1] = 0;
-	returnBuf[2] = 0;
-	for(int i = 0; i < 33; i++){
-		returnBuf[2] = returnBuf[2] + updateStatus[i].numUpdates;
+	int mapperId = request[RQS_MAPPER_PID];
+	printf("[%d] GET_ALL_UPDATES\n", mapperId);
+	static int returnBuf[LONG_RESPONSE_MSG_SIZE];
+
+	if (updateStatus[mapperId].mapperID > 0) {
+		returnBuf[RSP_COMMAND_ID] = GET_ALL_UPDATES;
+		returnBuf[RSP_CODE] = RSP_OK;
+		returnBuf[RQS_DATA] = 0;
+		for(int i = 0; i < MAX_STATUS_TABLE_LINES; i++){
+			returnBuf[RQS_DATA] = returnBuf[RQS_DATA] + updateStatus[i].numUpdates;
+		}
+		return returnBuf;
+	} else { //ERROR: Mapper Not in updateStatus Table
+		returnBuf[RSP_COMMAND_ID] = GET_ALL_UPDATES;
+		returnBuf[RSP_CODE] = RSP_NOK;
+		for(int i = 2; i < LONG_RESPONSE_MSG_SIZE; i++) {
+			returnBuf[i] = -1;
+		}
+		printf("[%d] Mapper Not in updateStatus Table\n", mapperId);
+		return returnBuf;
 	}
-	return returnBuf;
 
 }
 int * checkOut(int request[]) {
-	int mapperId = request[1];
+	int mapperId = request[RQS_MAPPER_PID];
 	printf("[%d] CHECKOUT\n", mapperId);
-	//checkOut
-	updateStatus[mapperId].numUpdates;
+	static int returnBuf[LONG_RESPONSE_MSG_SIZE];
+	if (updateStatus[mapperId].checkIO == 1) {
+		updateStatus[mapperId].checkIO = 0;
+		returnBuf[RSP_COMMAND_ID] = CHECKOUT;
+		returnBuf[RSP_CODE] = RSP_OK;
+		returnBuf[RQS_DATA] = mapperId;
+		return returnBuf;
+	} else {//ERROR: Mapper Client is not Checked-In
+		returnBuf[RSP_COMMAND_ID] = CHECKOUT;
+		returnBuf[RSP_CODE] = RSP_NOK;
+		for(int i = 2; i < LONG_RESPONSE_MSG_SIZE; i++) {
+			returnBuf[i] = -1;
+		}
+		printf("[%d] Mapper Client is not Checked-In\n", mapperId);
+		return returnBuf;
 
-	static int returnBuf[28];
-	returnBuf[0] = 1;
-	returnBuf[1] = 0;
-	returnBuf[2] = mapperId;
-	return returnBuf;
+	}
+
+
 }
 
 void * threadFunction(void * arg) {
 	struct threadArg * tArg = (struct threadArg *) arg;
-	int readbuf[28];
+	int readbuf[REQUEST_MSG_SIZE];
 	int *returnBuf;
 
 
 	read(tArg->clientfd, readbuf, MAX_MSG_SIZE);
 	pthread_mutex_lock(&updateLock);
-	switch(readbuf[0]) {
-		case 1:
+
+	//ERROR: Invalid Mapper ID
+	if (readbuf[RQS_MAPPER_PID] <= 0) {
+		returnBuf[RSP_COMMAND_ID] = readbuf[RQS_COMMAND_ID];
+		returnBuf[RSP_CODE] = RSP_NOK;
+		for(int i = 2; i < LONG_RESPONSE_MSG_SIZE; i++) {
+			returnBuf[i] = -1;
+		}
+		printf("[%d] Invalid Mapper ID\n", readbuf[RQS_MAPPER_PID]);
+		write(tArg->clientfd, returnBuf, REQUEST_MSG_SIZE*4);
+	}
+
+	switch(readbuf[RQS_COMMAND_ID]) {
+		case CHECKIN:
 			returnBuf = checkIn(readbuf);
 			write(tArg->clientfd, returnBuf, REQUEST_MSG_SIZE*4);
 			break;
-		case 2:
+		case UPDATE_AZLIST:
 			returnBuf = updateAZList(readbuf);
 			write(tArg->clientfd, returnBuf, REQUEST_MSG_SIZE*4);
 			break;
-		case 3:
+		case GET_AZLIST:
 			returnBuf = getAZList(readbuf);
 			write(tArg->clientfd, returnBuf, REQUEST_MSG_SIZE*4);
 			break;
-		case 4:
+		case GET_MAPPER_UPDATES:
 			returnBuf = getMapperUpdates(readbuf);
 			write(tArg->clientfd, returnBuf, REQUEST_MSG_SIZE*4);
 			break;
-		case 5:
+		case GET_ALL_UPDATES:
 			returnBuf = getAllUpdates(readbuf);
 			write(tArg->clientfd, returnBuf, REQUEST_MSG_SIZE*4);
 			break;
-		case 6:
+		case CHECKOUT:
 			returnBuf = checkOut(readbuf);
 			write(tArg->clientfd, returnBuf, REQUEST_MSG_SIZE*4);
 		default:
+			//ERROR: Unsucessful Request
+			returnBuf[RSP_COMMAND_ID] = readbuf[RQS_COMMAND_ID];
+			returnBuf[RSP_CODE] = RSP_NOK;
+			for(int i = 2; i < LONG_RESPONSE_MSG_SIZE; i++) {
+				returnBuf[i] = -1;
+			}
+			printf("[%d] Unsucessful Request\n", readbuf[1]);
+			write(tArg->clientfd, returnBuf, REQUEST_MSG_SIZE*4);
 			break;
 
 	}
