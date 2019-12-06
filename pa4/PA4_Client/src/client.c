@@ -16,11 +16,6 @@ int buffer[28]; // request size = 1D array with 28 entries
 char alphabet[] = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
                 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'};
 
-typedef struct dictionary {
-	char letter;
-  int count;
-} dict;
-
 void createLogFile(void) {
     pid_t p = fork();
     if (p==0)
@@ -63,8 +58,6 @@ int main(int argc, char *argv[]) {
   char folderName[100] = {'\0'};
   char *server_ip;
   int server_port;
-  struct sockaddr_in servaddr;
-  int connfd, len;
 
   if (argc == 5) { // 4 arguments
       strcpy(folderName, argv[1]);
@@ -242,8 +235,7 @@ int main(int argc, char *argv[]) {
 
        free(fileNameBuffer);
        fclose(fp);
-       int returnStatus;
-       exit(1);
+       exit(0);
      }
 
      else {

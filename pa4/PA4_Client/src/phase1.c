@@ -13,8 +13,9 @@ void recursiveTraverseFS(int mappers, char *basePath, FILE *fp[], int *toInsert,
 
 	//use https://www.gnu.org/software/libc/manual/html_node/Directory-Entries.html
 	while((dirContentPtr = readdir(dir)) != DIRNULL){
-		if (strcmp(dirContentPtr->d_name, ".") != 0 && 
-			strcmp(dirContentPtr->d_name, "..") != 0){
+		if (strcmp(dirContentPtr->d_name, ".") != 0 &&
+			 strcmp(dirContentPtr->d_name, "..") != 0 &&
+		   strcmp(dirContentPtr->d_name, ".DS_Store") != 0){
 			struct stat buf;
 			 lstat(path, &buf);
 			 if (S_ISLNK(buf.st_mode))
@@ -25,7 +26,7 @@ void recursiveTraverseFS(int mappers, char *basePath, FILE *fp[], int *toInsert,
 				strcpy(filePath, basePath);
 				strcat(filePath, "/");
 				strcat(filePath, dirContentPtr->d_name);
-				
+
 				//insert into the required mapper file
 				fputs(filePath, fp[*toInsert]);
 				fputs("\n", fp[*toInsert]);
