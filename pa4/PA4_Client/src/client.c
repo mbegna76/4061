@@ -5,6 +5,8 @@
 #include <zconf.h>
 #include <arpa/inet.h>
 #include <ctype.h>
+#include <sys/types.h>
+  #include <sys/wait.h>
 #include "../include/protocol.h"
 #include "phase1.c"
 
@@ -42,12 +44,11 @@ int* serverConnectionAndRespone(int server_port, char* server_ip, int request[])
 
 
   if (connect(sockfd, (struct sockaddr *) &address, sizeof(address)) == 0) {
-    printf("[%d] open connection\n", request[1]);
+
     write(sockfd, request, REQUEST_MSG_SIZE*4);
     read(sockfd, readbuf, REQUEST_MSG_SIZE*4);
 
     close(sockfd);
-    printf("[%d] close connection\n", request[1]);
   }
   else {
      perror("Connection failed!");
@@ -112,6 +113,13 @@ int main(int argc, char *argv[]) {
        int request[28];
        int* response;
        int numMessagesSent = 0;
+       char *logOutput;
+
+       // open connection
+       logOutput = (char*)malloc(sizeof(char)*30);
+       sprintf(logOutput, "[%d] open connection\n",  mapperIndex);
+       fputs(logOutput, logfp);
+       free(logOutput);
 
 
        // CHECK-IN
@@ -122,7 +130,10 @@ int main(int argc, char *argv[]) {
        request[0] = 1;
        request[1] = mapperIndex;
        response = serverConnectionAndRespone(server_port, server_ip, request);
-       printf("[%d] CHECKIN: %d %d\n", mapperIndex, response[1], response[2]);
+       logOutput = (char*)malloc(sizeof(char)*30);
+       sprintf(logOutput, "[%d] CHECKIN: %d %d\n", mapperIndex, response[1], response[2]);
+       fputs(logOutput, logfp);
+       free(logOutput);
 
 
        //Reset request values
@@ -157,17 +168,31 @@ int main(int argc, char *argv[]) {
          fclose (tp);
        }
 
-       printf("[%d] UPDATE_AZLIST: %d\n", mapperIndex, numMessagesSent);
+       logOutput = (char*)malloc(sizeof(char)*30);
+       sprintf(logOutput, "[%d] UPDATE_AZLIST: %d\n", mapperIndex, numMessagesSent);
+       fputs(logOutput, logfp);
+       free(logOutput);
 
        //GET getAZList
        request[0] = 3;
        request[1] = mapperIndex;
        response = serverConnectionAndRespone(server_port, server_ip, request);
-       printf("[%d] GET_AZLIST: ", mapperIndex);
+       logOutput = (char*)malloc(sizeof(char)*20);
+       sprintf(logOutput, "[%d] GET_AZLIST: ", mapperIndex);
+       fputs(logOutput, logfp);
+       free(logOutput);
+
        for(int i = 0; i < 28; i++) {
-         printf("%d ", response[i]);
+
+         logOutput = (char*)malloc(sizeof(char)*10);
+         sprintf(logOutput, "%d ", response[i]);
+         fputs(logOutput, logfp);
+         free(logOutput);
        }
-       printf("\n");
+       logOutput = (char*)malloc(sizeof(char)*2);
+       sprintf(logOutput, " \n");
+       fputs(logOutput, logfp);
+       free(logOutput);
 
        //GET Mapper Updates
        //Reset request values
@@ -177,7 +202,10 @@ int main(int argc, char *argv[]) {
        request[0] = 4;
        request[1] = mapperIndex;
        response = serverConnectionAndRespone(server_port, server_ip, request);
-       printf("[%d] GET_MAPPER_UPDATES: %d %d\n", mapperIndex, response[1], response[2]);
+       logOutput = (char*)malloc(sizeof(char)*50);
+       sprintf(logOutput, "[%d] GET_MAPPER_UPDATES: %d %d\n", mapperIndex, response[1], response[2]);
+       fputs(logOutput, logfp);
+       free(logOutput);
 
        //GET ALL Updates
        //Reset request values
@@ -187,7 +215,10 @@ int main(int argc, char *argv[]) {
        request[0] = 5;
        request[1] = mapperIndex;
        response = serverConnectionAndRespone(server_port, server_ip, request);
-       printf("[%d] GET_ALL_UPDATES: %d %d\n", mapperIndex, response[1], response[2]);
+       logOutput = (char*)malloc(sizeof(char)*50);
+       sprintf(logOutput, "[%d] GET_ALL_UPDATES: %d %d\n", mapperIndex, response[1], response[2]);
+       fputs(logOutput, logfp);
+       free(logOutput);
 
 
        // CHECK-OUT
@@ -198,12 +229,20 @@ int main(int argc, char *argv[]) {
        request[0] = 6;
        request[1] = mapperIndex;
        response = serverConnectionAndRespone(server_port, server_ip, request);
-       printf("[%d] CHECKOUT: %d %d\n", mapperIndex, response[1], response[2]);
+       logOutput = (char*)malloc(sizeof(char)*30);
+       sprintf(logOutput, "[%d] CHECKOUT: %d %d\n", mapperIndex, response[1], response[2]);
+       fputs(logOutput, logfp);
+       free(logOutput);
+
+       // close connection
+       logOutput = (char*)malloc(sizeof(char)*30);
+       sprintf(logOutput, "[%d] close connection\n",  mapperIndex);
+       fputs(logOutput, logfp);
+       free(logOutput);
 
        free(fileNameBuffer);
        fclose(fp);
        int returnStatus;
-       waitpid(mappedProcs[i], &returnStatus, 0);
        exit(1);
      }
 

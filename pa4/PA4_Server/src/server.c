@@ -95,6 +95,7 @@ int * getAllUpdates(int request[]) {
 	static int returnBuf[28];
 	returnBuf[0] = 5;
 	returnBuf[1] = 0;
+	returnBuf[2] = 0;
 	for(int i = 0; i < 33; i++){
 		returnBuf[2] = returnBuf[2] + updateStatus[i].numUpdates;
 	}
@@ -156,6 +157,7 @@ void * threadFunction(void * arg) {
 	pthread_mutex_lock(&currentConn_lock);
 	currentConn--;
 	pthread_mutex_unlock(&currentConn_lock);
+	printf("close connection from %s:%d\n", tArg->clientip, tArg->clientport);
 	return NULL;
 }
 
@@ -205,7 +207,6 @@ int main(int argc, char *argv[]) {
       arg->clientip = inet_ntoa(clientAddress.sin_addr);
       arg->clientport = clientAddress.sin_port;
 
-			printf("open connection from %s:%d\n", arg->clientip, arg->clientport);
 
       if(currentConn == MAX_CONCURRENT_CLIENTS) {
         printf("Server is too busy\n");
@@ -215,6 +216,7 @@ int main(int argc, char *argv[]) {
         continue;
       }
       else {
+				printf("open connection from %s:%d\n", arg->clientip, arg->clientport);
 
         pthread_create(&threads[count], NULL, threadFunction, (void*) arg);
 				count++;
@@ -222,7 +224,6 @@ int main(int argc, char *argv[]) {
         currentConn++;
         pthread_mutex_unlock(&currentConn_lock);
       }
-			printf("close connection from %s:%d\n", arg->clientip, arg->clientport);
 
   }
 	return 0;
