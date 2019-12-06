@@ -37,13 +37,14 @@ void * threadFunction(void * arg) {
 	int readbuf[28];
 
 	read(tArg->clientfd, readbuf, MAX_MSG_SIZE);
-  for(int i =0; i< 28; i++) {
-    printf("%d ", readbuf[i]);
-  }
-  printf("\n");
-	// write(tArg->clientfd, (void *) "Acknowledge", 12);
-	// close(tArg->clientfd);
-	// free(tArg);
+	if (readbuf[0] = 6){
+		printf("%d ", readbuf[0]);
+
+	  printf("\n");
+	}
+
+	close(tArg->clientfd);
+	free(tArg);
 	pthread_mutex_lock(&currentConn_lock);
 	currentConn--;
 	pthread_mutex_unlock(&currentConn_lock);
@@ -98,8 +99,8 @@ int main(int argc, char *argv[]) {
         continue;
       }
       else {
-        count++;
         pthread_create(&threads[count], NULL, threadFunction, (void*) arg);
+				count++;
         pthread_mutex_lock(&currentConn_lock);
         currentConn++;
         pthread_mutex_unlock(&currentConn_lock);

@@ -29,6 +29,24 @@ void createLogFile(void) {
     logfp = fopen("log/log_client.txt", "w");
 }
 
+void serverConnection(int server_port, char* server_ip, int request[]) {
+  // create TCP socket
+  int sockfd = socket(AF_INET , SOCK_STREAM , 0);
+  // specify address to connect to
+  struct sockaddr_in address;
+  address.sin_family = AF_INET;
+  address.sin_port = htons(server_port);
+  address.sin_addr.s_addr = inet_addr(server_ip);
+
+  if (connect(sockfd, (struct sockaddr *) &address, sizeof(address)) == 0) {
+    write(sockfd, request, REQUEST_MSG_SIZE*4);
+    close(sockfd);
+  }
+  else {
+     perror("Connection failed!");
+  }
+}
+
 int main(int argc, char *argv[]) {
 
   int mappers;
@@ -61,9 +79,6 @@ int main(int argc, char *argv[]) {
   // phase1 - File Path Partitioning
   traverseFS(mappers, folderName);
 
-
-
-
   // Phase2 - Mapper Clients's Deterministic Request Handling
   pid_t mappedProcs[mappers]; // create mapper processes
 
@@ -78,6 +93,7 @@ int main(int argc, char *argv[]) {
        } else {
          pathSize = 27;
        }
+
        printf("Runing mapper %d\n", i+1);
        FILE * fp;
        char *fileNameBuffer = (char*)malloc(pathSize * sizeof(char));
@@ -86,50 +102,46 @@ int main(int argc, char *argv[]) {
        char fileBuff[255];
        char lineBuff[255];
        int request[28];
-       for(int m = 0; m < 26; m++) {
+
+
+       // CHECK-IN
+       for(int m = 0; m < 28; m++) {
          request[m] = 0;
        }
+       request[0] = 1;
+       request[1] = mapperIndex;
+       serverConnection(server_port, server_ip, request);
 
-       // create TCP socket
-       int sockfd = socket(AF_INET , SOCK_STREAM , 0);
-       // specify address to connect to
-       struct sockaddr_in address;
-       address.sin_family = AF_INET;
-       address.sin_port = htons(server_port);
-       address.sin_addr.s_addr = inet_addr(server_ip);
 
-       if (connect(sockfd, (struct sockaddr *) &address, sizeof(address)) == 0) {
-
-         // Loops through the .txt files in the mapper file
-         while (fscanf(fp, "%s", fileBuff) != -1){
-           FILE * tp;
-           tp = fopen(fileBuff, "r");
-           // Loops through the lines in a .txt file
-           while (fscanf(tp, "%s", lineBuff) != -1){
-             for (int j = 0; j < 26; j++) {
-               if (toupper(alphabet[j]) == toupper(lineBuff[0])) {
-                 request[j+2] =  request[j+2] + 1;
-                 break;
-               }
-             }
-             //SEND UPDATE TO SERVER
-             write(sockfd, request, REQUEST_MSG_SIZE*4);
-             for (int i = 0; i < 28; i++) {
-               request[i] = 0;
+       // Loops through the .txt files in the mapper file
+       while (fscanf(fp, "%s", fileBuff) != -1){
+         FILE * tp;
+         tp = fopen(fileBuff, "r");
+         // Loops through the lines in a .txt file
+         while (fscanf(tp, "%s", lineBuff) != -1){
+           for (int j = 0; j < 26; j++) {
+             if (toupper(alphabet[j]) == toupper(lineBuff[0])) {
+               request[j+2] =  request[j+2] + 1;
+               break;
              }
            }
-           fclose (tp);
          }
-         //DO THE CONNECTIONS AND SENDING IN HERE -> Structlist contains the count, but we can chnge how we send the values
-         //REQUEST NOW CONTAINS THE DATA TO SEND
-         printf("A: %d\n", request[2]);
-         close(sockfd);
-
+         //SEND UPDATE TO SERVER
+         request[0] = 2;
+         request[1] = mapperIndex;
+         serverConnection(server_port, server_ip, request);
+         for (int i = 0; i < 28; i++) {
+           request[i] = 0;
+         }
+         fclose (tp);
        }
-       else {
-         		perror("Connection failed!");
+       // CHECK-OUT
+       for(int m = 0; m < 28; m++) {
+         request[m] = 0;
        }
-
+       request[0] = 6;
+       request[1] = mapperIndex;
+       serverConnection(server_port, server_ip, request);
 
        free(fileNameBuffer);
        fclose(fp);
