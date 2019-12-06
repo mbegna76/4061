@@ -1,6 +1,7 @@
 /*test machine: CSELAB_machine_name * date: 12/06/19
 * name: Moti Begna , Wally Lu
 * x500: begna002 , luxx0460 */
+#define _BSD_SOURCE
 
 #include <stdio.h>
 #include <stdlib.h>
