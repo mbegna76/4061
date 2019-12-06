@@ -29,7 +29,8 @@ void createLogFile(void) {
     logfp = fopen("log/log_client.txt", "w");
 }
 
-void serverConnection(int server_port, char* server_ip, int request[]) {
+
+int* serverConnectionAndRespone(int server_port, char* server_ip, int request[]) {
   // create TCP socket
   int sockfd = socket(AF_INET , SOCK_STREAM , 0);
   // specify address to connect to
@@ -37,14 +38,22 @@ void serverConnection(int server_port, char* server_ip, int request[]) {
   address.sin_family = AF_INET;
   address.sin_port = htons(server_port);
   address.sin_addr.s_addr = inet_addr(server_ip);
+  static int readbuf[28];
+
 
   if (connect(sockfd, (struct sockaddr *) &address, sizeof(address)) == 0) {
+    printf("[%d] open connection\n", request[1]);
     write(sockfd, request, REQUEST_MSG_SIZE*4);
+    read(sockfd, readbuf, REQUEST_MSG_SIZE*4);
+
     close(sockfd);
+    printf("[%d] close connection\n", request[1]);
   }
   else {
      perror("Connection failed!");
   }
+  return readbuf;
+
 }
 
 int main(int argc, char *argv[]) {
@@ -94,7 +103,6 @@ int main(int argc, char *argv[]) {
          pathSize = 27;
        }
 
-       printf("Runing mapper %d\n", i+1);
        FILE * fp;
        char *fileNameBuffer = (char*)malloc(pathSize * sizeof(char));
        sprintf(fileNameBuffer, "./MapperInput/Mapper_%d.txt", mapperIndex);
@@ -102,16 +110,25 @@ int main(int argc, char *argv[]) {
        char fileBuff[255];
        char lineBuff[255];
        int request[28];
+       int* response;
+       int numMessagesSent = 0;
 
 
        // CHECK-IN
+       //Reset request values
        for(int m = 0; m < 28; m++) {
          request[m] = 0;
        }
        request[0] = 1;
        request[1] = mapperIndex;
-       serverConnection(server_port, server_ip, request);
+       response = serverConnectionAndRespone(server_port, server_ip, request);
+       printf("[%d] CHECKIN: %d %d\n", mapperIndex, response[1], response[2]);
 
+
+       //Reset request values
+       for(int m = 0; m < 28; m++) {
+         request[m] = 0;
+       }
 
        // Loops through the .txt files in the mapper file
        while (fscanf(fp, "%s", fileBuff) != -1){
@@ -126,22 +143,62 @@ int main(int argc, char *argv[]) {
              }
            }
          }
+
          //SEND UPDATE TO SERVER
          request[0] = 2;
          request[1] = mapperIndex;
-         serverConnection(server_port, server_ip, request);
+         response = serverConnectionAndRespone(server_port, server_ip, request);
+         numMessagesSent++;
+         //Reset request values
          for (int i = 0; i < 28; i++) {
            request[i] = 0;
          }
+
          fclose (tp);
        }
+
+       printf("[%d] UPDATE_AZLIST: %d\n", mapperIndex, numMessagesSent);
+
+       //GET getAZList
+       request[0] = 3;
+       request[1] = mapperIndex;
+       response = serverConnectionAndRespone(server_port, server_ip, request);
+       printf("[%d] GET_AZLIST: ", mapperIndex);
+       for(int i = 0; i < 28; i++) {
+         printf("%d ", response[i]);
+       }
+       printf("\n");
+
+       //GET Mapper Updates
+       //Reset request values
+       for(int m = 0; m < 28; m++) {
+         request[m] = 0;
+       }
+       request[0] = 4;
+       request[1] = mapperIndex;
+       response = serverConnectionAndRespone(server_port, server_ip, request);
+       printf("[%d] GET_MAPPER_UPDATES: %d %d\n", mapperIndex, response[1], response[2]);
+
+       //GET ALL Updates
+       //Reset request values
+       for(int m = 0; m < 28; m++) {
+         request[m] = 0;
+       }
+       request[0] = 5;
+       request[1] = mapperIndex;
+       response = serverConnectionAndRespone(server_port, server_ip, request);
+       printf("[%d] GET_ALL_UPDATES: %d %d\n", mapperIndex, response[1], response[2]);
+
+
        // CHECK-OUT
+       //Reset request values
        for(int m = 0; m < 28; m++) {
          request[m] = 0;
        }
        request[0] = 6;
        request[1] = mapperIndex;
-       serverConnection(server_port, server_ip, request);
+       response = serverConnectionAndRespone(server_port, server_ip, request);
+       printf("[%d] CHECKOUT: %d %d\n", mapperIndex, response[1], response[2]);
 
        free(fileNameBuffer);
        fclose(fp);
@@ -156,9 +213,6 @@ int main(int argc, char *argv[]) {
           continue;
         }
     }
-
-
-
 
 
     fclose(logfp);
