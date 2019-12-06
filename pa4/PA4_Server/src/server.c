@@ -41,16 +41,14 @@ struct tableEntry updateStatus[MAX_STATUS_TABLE_LINES]; // updateStatus table
 int* checkIn(int request[]) {
 	int mapperId = request[RQS_MAPPER_PID];
 	printf("[%d] CHECKIN\n", mapperId);
-	static int returnBuf[LONG_RESPONSE_MSG_SIZE];
+	static int returnBuf[RESPONSE_MSG_SIZE];
 	//Looking for previous mapper
 	if (updateStatus[mapperId].mapperID != 0) {
 			//ERROR: Mapper Client Already Checked-In
 			if (updateStatus[mapperId].checkIO == 1) {
 				returnBuf[RSP_COMMAND_ID] = CHECKIN;
 				returnBuf[RSP_CODE] = RSP_NOK;
-				for(int i = 2; i < LONG_RESPONSE_MSG_SIZE; i++) {
-					returnBuf[i] = -1;
-				}
+				returnBuf[3] = mapperId;
 				printf("[%d] Mapper Client Already Checked-In\n", mapperId);
 				return returnBuf;
 			}
@@ -76,7 +74,7 @@ int * updateAZList(int request[]) {
 	//increment updateStatus numUpdates
 	updateStatus[mapperId].numUpdates = updateStatus[mapperId].numUpdates + 1;
 
-	static int returnBuf[LONG_RESPONSE_MSG_SIZE];
+	static int returnBuf[RESPONSE_MSG_SIZE];
 	returnBuf[RSP_COMMAND_ID] = UPDATE_AZLIST;
 	returnBuf[RSP_CODE] = RSP_OK;
 	returnBuf[RQS_DATA] = mapperId;
@@ -98,7 +96,7 @@ int * getAZList(int request[]) {
 int * getMapperUpdates(int request[]) {
 	int mapperId = request[RQS_MAPPER_PID];
 	printf("[%d] GET_MAPPER_UPDATES\n", mapperId);
-	static int returnBuf[LONG_RESPONSE_MSG_SIZE];
+	static int returnBuf[RESPONSE_MSG_SIZE];
 
 	if (updateStatus[mapperId].mapperID > 0) {
 		returnBuf[RSP_COMMAND_ID] = GET_MAPPER_UPDATES;
@@ -118,7 +116,7 @@ int * getMapperUpdates(int request[]) {
 int * getAllUpdates(int request[]) {
 	int mapperId = request[RQS_MAPPER_PID];
 	printf("[%d] GET_ALL_UPDATES\n", mapperId);
-	static int returnBuf[LONG_RESPONSE_MSG_SIZE];
+	static int returnBuf[RESPONSE_MSG_SIZE];
 
 	if (updateStatus[mapperId].mapperID > 0) {
 		returnBuf[RSP_COMMAND_ID] = GET_ALL_UPDATES;
