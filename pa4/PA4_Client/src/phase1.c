@@ -1,3 +1,5 @@
+#define _BSD_SOURCE
+
 #include "../include/phase1.h"
 
 void recursiveTraverseFS(int mappers, char *basePath, FILE *fp[], int *toInsert, int *nFiles){
